@@ -87,7 +87,8 @@ Setup done: Python 3.15.0 installed from python.org, with certificates set up.
 3e done: real iPhone photos (camera and library) pass the server checks.
 **Step 3 complete** (git tag `step-3`).
 4a done: I have a Pl@ntNet account and key. Docs read (facts below). Decisions: Pl@ntNet's acknowledgement sentence goes under every result (text, no logo); the server refuses HEIC for now (E10) until step 6 converts photos to JPEG.
-Next: 4b, the key in `.env`, loaded with python-dotenv.
+4b done: key saved in `.env` (26 characters, checked without displaying it); `.env.example` is the template in git; python-dotenv 1.2.4 loads it in `app.py`.
+Next: 4c, `plantnet.py` and one real call (ask before installing `requests`).
 
 ## Environment notes
 
@@ -113,5 +114,4 @@ Next: 4b, the key in `.env`, loaded with python-dotenv.
 
 ## Still to do in later steps
 
-- Create `.env` at step 4 (`.gitignore` already blocks it).
 - Commit after each finished small step, with a clear message.

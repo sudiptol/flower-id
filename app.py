@@ -1,4 +1,8 @@
+from dotenv import load_dotenv
 from flask import Flask, jsonify, render_template, request
+
+# Read secrets such as PLANTNET_API_KEY from the .env file (never saved in git).
+load_dotenv()
 
 # Largest photo the server accepts (10 MB). The same limit is in static/app.js.
 MAX_PHOTO_BYTES = 10 * 1024 * 1024
