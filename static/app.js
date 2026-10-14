@@ -48,6 +48,29 @@ function wikipediaLink(scientificName) {
   return "https://en.wikipedia.org/wiki/" + encodeURIComponent(scientificName.replaceAll(" ", "_"));
 }
 
+// The Wikipedia part of the result: the summary and link, or a W1/W2 message (SPEC.md section 5).
+function showWikipedia(wikipedia) {
+  const summary = document.getElementById("wikipedia-summary");
+  const reference = document.getElementById("wikipedia-reference");
+  const problem = document.getElementById("wikipedia-problem");
+
+  // Only accept normal web links: a link starting with "javascript:" could run code when tapped.
+  const found = wikipedia.status === "found" && wikipedia.url.startsWith("https://");
+
+  summary.hidden = !found;
+  reference.hidden = !found;
+  problem.hidden = found;
+
+  if (found) {
+    summary.textContent = wikipedia.summary;
+    document.getElementById("wikipedia-link").href = wikipedia.url;
+  } else if (wikipedia.status === "no_article") {
+    problem.textContent = "No Wikipedia article found"; // W1
+  } else {
+    problem.textContent = "Couldn't load the Wikipedia summary right now"; // W2
+  }
+}
+
 // Fill in the result screen: state C when confident, state D when not.
 // Names come from another service, so they're always set with textContent, never as HTML.
 function showResult(result) {
@@ -97,6 +120,8 @@ function showResult(result) {
     list.append(item);
   }
   document.getElementById("other-candidates").hidden = !(unsure && others.length > 0);
+
+  showWikipedia(result.wikipedia);
 
   resultImage.src = previewImage.src;
   showState(resultSection);

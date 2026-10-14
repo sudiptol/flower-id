@@ -105,6 +105,21 @@ button.button {
   overflow-wrap: anywhere; /* lets the long link wrap on narrow phones */
 }
 
+/* The Wikipedia part, between two dividing lines */
+.wikipedia {
+  margin-bottom: 16px;
+  border-bottom: 1px solid #cccccc;
+}
+
+.wikipedia .source a {
+  color: #2e6b30;
+  font-weight: normal;
+}
+
+.wikipedia .note {
+  text-align: left;
+}
+
 /* Warning box for problems: what happened and what to do */
 .problem {
   padding: 16px;

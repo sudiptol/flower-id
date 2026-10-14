@@ -103,7 +103,8 @@ Setup done: Python 3.15.0 installed from python.org, with certificates set up.
 5a done: Wikipedia API explored (facts below).
 5b done: `wikipedia.py` with `fetch_summary(name)` returning status `found` / `no_article` / `unavailable`; 11 tests in `tests/test_wikipedia.py` (45 total). Checked against the real Wikipedia.
 5c done: `/identify` adds `"wikipedia": {status, summary, url}` for the best guess only; Pl@ntNet result always returned. 49 tests; real end-to-end check passed.
-Next: 5d, the page shows the Wikipedia part.
+5d done: the page shows the Wikipedia summary with "Reference: Wikipedia" and the article link, or the W1/W2 message. Only `https://` links are accepted.
+Next: 5e is already covered (fake-Wikipedia tests written in 5b and 5c), so next is 5f, real flowers on the phone.
 
 ## Environment notes
 
