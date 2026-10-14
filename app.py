@@ -47,37 +47,46 @@ def home():
     return render_template("index.html")
 
 
+def error_reply(message, status_code, can_retry=False):
+    """An error for the page: the message to show, and whether a Try again button makes sense.
+
+    can_retry is only True when sending the same photo again might work
+    (SPEC.md section 5): not for file problems, "no flower", the daily limit or a bad key.
+    """
+    return jsonify(error=message, can_retry=can_retry), status_code
+
+
 @app.route("/identify", methods=["POST"])
 def identify():
     # The browser sends the photo as a form field named "photo".
     photo = request.files.get("photo")
     if photo is None:
-        return jsonify(error="No photo was sent."), 400
+        return error_reply("No photo was sent.", 400)
 
     photo_bytes = photo.read()
     app.logger.info("Received photo: %d KB", len(photo_bytes) // 1024)
 
     if is_heic(photo_bytes):
-        # Error E10: Pl@ntNet only accepts JPEG and PNG. Step 6 converts photos in the browser.
-        return jsonify(error="HEIC photos can't be identified yet. Please use a JPG or PNG."), 400
+        # Error E10: Pl@ntNet only accepts JPEG and PNG. The page converts photos when it can.
+        return error_reply("HEIC photos can't be identified yet. Please use a JPG or PNG.", 400)
 
     if not is_jpeg_or_png(photo_bytes):
         # Error E1 from SPEC.md section 5.
-        return jsonify(error="That file isn't a photo. Please choose a JPG or PNG image."), 400
+        return error_reply("That file isn't a photo. Please choose a JPG or PNG image.", 400)
 
     if not os.environ.get("PLANTNET_API_KEY"):
         app.logger.error("PLANTNET_API_KEY is missing. Is it in the .env file?")
-        return jsonify(error=E6_BAD_KEY), 500
+        return error_reply(E6_BAD_KEY, 500)
 
     try:
         response = identify_with_plantnet(photo_bytes)
     except requests.Timeout:
         app.logger.warning("Pl@ntNet didn't answer in time")
-        return jsonify(error=E3_TOO_SLOW), 504
+        return error_reply(E3_TOO_SLOW, 504, can_retry=True)
     except requests.RequestException as error:
         # Log only the kind of error: its full text can contain the web address, which includes the key.
         app.logger.warning("Couldn't reach Pl@ntNet (%s)", type(error).__name__)
-        return jsonify(error=E7_PLANTNET_DOWN), 502
+        return error_reply(E7_PLANTNET_DOWN, 502, can_retry=True)
 
     if response.status_code != 200:
         return plantnet_error(response)
@@ -86,7 +95,7 @@ def identify():
     app.logger.info("Pl@ntNet: %s identifications left today", reply.get("remainingIdentificationRequests"))
 
     if not reply.get("results"):
-        return jsonify(error=E4_NO_FLOWER), 404
+        return error_reply(E4_NO_FLOWER, 404)
 
     summary = summarise(reply)
     # Show in Terminal what Pl@ntNet said, to help understand surprising results.
@@ -112,20 +121,20 @@ def plantnet_error(response):
     app.logger.warning("Pl@ntNet replied with status %s", response.status_code)
 
     if response.status_code == 404:
-        return jsonify(error=E4_NO_FLOWER), 404
+        return error_reply(E4_NO_FLOWER, 404)  # same photo, same answer: no point retrying
     if response.status_code == 429:
-        return jsonify(error=E5_DAILY_LIMIT), 429
+        return error_reply(E5_DAILY_LIMIT, 429)
     if response.status_code in (401, 403):
-        return jsonify(error=E6_BAD_KEY), 500
+        return error_reply(E6_BAD_KEY, 500)
     if response.status_code >= 500:
-        return jsonify(error=E7_PLANTNET_DOWN), 502
-    return jsonify(error=E8_UNEXPECTED), 502
+        return error_reply(E7_PLANTNET_DOWN, 502, can_retry=True)
+    return error_reply(E8_UNEXPECTED, 502, can_retry=True)
 
 
 @app.errorhandler(413)
 def photo_too_large(error):
     # Error E9 from SPEC.md section 5.
-    return jsonify(error="That photo is too large (over 10 MB). Please choose a smaller one."), 413
+    return error_reply("That photo is too large (over 10 MB). Please choose a smaller one.", 413)
 
 
 if __name__ == "__main__":

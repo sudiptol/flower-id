@@ -195,46 +195,58 @@ def make_plantnet_fail_with(monkeypatch, error):
     monkeypatch.setattr("app.identify_with_plantnet", fail)
 
 
-# Each line: what Pl@ntNet answers -> the message we must show.
-@pytest.mark.parametrize("plantnet_status, expected_message", [
-    (404, E4_NO_FLOWER),       # no plant in the photo
-    (429, E5_DAILY_LIMIT),     # 500 used today
-    (401, E6_BAD_KEY),         # wrong key
-    (403, E6_BAD_KEY),         # key not allowed
-    (500, E7_PLANTNET_DOWN),   # Pl@ntNet crashed
-    (503, E7_PLANTNET_DOWN),   # Pl@ntNet down for maintenance
-    (400, E8_UNEXPECTED),      # something we didn't plan for
+# Each line: what Pl@ntNet answers -> the message we must show, and whether Try again makes sense.
+@pytest.mark.parametrize("plantnet_status, expected_message, expected_can_retry", [
+    (404, E4_NO_FLOWER,     False),  # no plant in the photo: same photo, same answer
+    (429, E5_DAILY_LIMIT,   False),  # 500 used today: won't change until tomorrow
+    (401, E6_BAD_KEY,       False),  # wrong key: needs fixing in .env
+    (403, E6_BAD_KEY,       False),  # key not allowed
+    (500, E7_PLANTNET_DOWN, True),   # Pl@ntNet crashed: may recover
+    (503, E7_PLANTNET_DOWN, True),   # Pl@ntNet down for maintenance
+    (400, E8_UNEXPECTED,    True),   # something we didn't plan for: worth one more go
 ])
-def test_plantnet_errors_become_friendly_messages(client, monkeypatch, plantnet_status, expected_message):
+def test_plantnet_errors_become_friendly_messages(
+        client, monkeypatch, plantnet_status, expected_message, expected_can_retry):
     make_plantnet_reply_with(monkeypatch, plantnet_status, {"message": "whatever Pl@ntNet says"})
     response = upload(client, JPEG_BYTES)
     assert response.status_code >= 400
-    assert response.get_json()["error"] == expected_message
+    assert response.get_json() == {"error": expected_message, "can_retry": expected_can_retry}
 
 
 def test_plantnet_ok_but_no_results_means_no_flower(client, monkeypatch):
     make_plantnet_reply_with(monkeypatch, 200, {"results": []})
     response = upload(client, JPEG_BYTES)
-    assert response.get_json()["error"] == E4_NO_FLOWER
+    assert response.get_json() == {"error": E4_NO_FLOWER, "can_retry": False}
 
 
 def test_plantnet_too_slow(client, monkeypatch):
     make_plantnet_fail_with(monkeypatch, requests.Timeout())
     response = upload(client, JPEG_BYTES)
-    assert response.get_json()["error"] == E3_TOO_SLOW
+    assert response.get_json() == {"error": E3_TOO_SLOW, "can_retry": True}
 
 
 def test_plantnet_unreachable(client, monkeypatch):
     make_plantnet_fail_with(monkeypatch, requests.ConnectionError())
     response = upload(client, JPEG_BYTES)
-    assert response.get_json()["error"] == E7_PLANTNET_DOWN
+    assert response.get_json() == {"error": E7_PLANTNET_DOWN, "can_retry": True}
 
 
 def test_missing_key_is_reported_without_calling_plantnet(client, monkeypatch):
     monkeypatch.delenv("PLANTNET_API_KEY")
     make_plantnet_fail_with(monkeypatch, AssertionError("Pl@ntNet must not be called without a key"))
     response = upload(client, JPEG_BYTES)
-    assert response.get_json()["error"] == E6_BAD_KEY
+    assert response.get_json() == {"error": E6_BAD_KEY, "can_retry": False}
+
+
+# --- File problems never offer Try again: the same file would fail the same way ---
+
+@pytest.mark.parametrize("photo_bytes", [
+    HEIC_BYTES,                           # E10
+    b"just some text",                    # E1
+    JPEG_BYTES + b"\x00" * MAX_PHOTO_BYTES,  # E9, too big
+])
+def test_file_problems_cannot_be_retried(client, photo_bytes):
+    assert upload(client, photo_bytes).get_json()["can_retry"] is False
 
 
 # --- The key never leaks (SPEC.md acceptance criterion 7) ---
