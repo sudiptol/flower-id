@@ -10,6 +10,9 @@
 __pycache__/
 *.pyc
 
+# pytest's cache of the last test run
+.pytest_cache/
+
 # Mac clutter
 .DS_Store
 

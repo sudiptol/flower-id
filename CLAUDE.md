@@ -76,12 +76,14 @@ Setup done: Python 3.15.0 installed from python.org, with certificates set up.
 3a done: `POST /identify` receives a photo and replies with JSON (filename, type, size); tested with curl.
 3b done: the page uploads the photo with `fetch` and shows the server's reply; E2 and E8 messages wired up. Phone test: iPhone Safari sends **JPEG, about 2 MB** (it converts HEIC itself).
 3c done: server checks first bytes (JPEG, PNG, HEIC) and a 10 MB limit; new error E9 in the spec. The page also checks size before uploading. `MAX_PHOTO_BYTES` lives in both `app.py` and `static/app.js`: change both together.
-Next: 3d, first automated tests with pytest (ask before installing).
+3d done: pytest 9.1.1 installed; 11 tests in `tests/test_app.py`; dev-only tools pinned in `requirements-dev.txt`.
+Next: 3e, final phone check and finish step 3.
 
 ## Environment notes
 
 - Use `python3` (3.15.0, at `/Library/Frameworks/Python.framework/Versions/3.15/`). An old Python 3.9 is also on the Mac; ignore it.
-- After installing or upgrading a package, update `requirements.txt` with `pip freeze > requirements.txt` and commit it. Rebuild the environment with `pip install -r requirements.txt`.
+- Two package lists: `requirements.txt` holds what the app needs to run (also used online), and `requirements-dev.txt` adds tools only needed on the Mac, like pytest. After adding a package, put it in the right file with its exact version, and commit. Rebuild everything with `pip install -r requirements-dev.txt`.
+- **Run the tests before every commit:** `python -m pytest` (with `.venv` active). Add tests for each new behaviour, including failures.
 - Project packages live in `.venv`. Turn it on with `source .venv/bin/activate` (prompt shows `(.venv)`), off with `deactivate`.
 - Find the Mac's Wi-Fi address with `ipconfig getifaddr en0` (it was 192.168.86.23 on 2026-10-14; it can change). The phone opens `http://<that address>:5001`.
 - **Testing on the phone (Safari):** after code changes, close the tab and open a fresh one. A plain refresh can keep the old page and make a working change look broken.
