@@ -62,11 +62,13 @@ Setup done: Python 3.15.0 installed from python.org, with certificates set up.
 1g done: out of scope approved, in `SPEC.md` section 6.
 **Step 1 complete:** spec signed off (git tag `spec-v1`). `SPEC.md` is the source of truth; check work against it.
 2a done: virtual environment created in `.venv` (Python 3.15.0, ignored by git).
-Next: 2b, install Flask (ask first).
+2b done: Flask 3.1.3 installed in `.venv`; exact versions pinned in `requirements.txt`.
+Next: 2c, smallest possible Flask app ("Hello" on the Mac).
 
 ## Environment notes
 
 - Use `python3` (3.15.0, at `/Library/Frameworks/Python.framework/Versions/3.15/`). An old Python 3.9 is also on the Mac; ignore it.
+- After installing or upgrading a package, update `requirements.txt` with `pip freeze > requirements.txt` and commit it. Rebuild the environment with `pip install -r requirements.txt`.
 - Project packages live in `.venv`. Turn it on with `source .venv/bin/activate` (prompt shows `(.venv)`), off with `deactivate`.
 - Homebrew is installed but too old to run on this macOS version, so don't rely on it.
 
