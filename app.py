@@ -55,6 +55,7 @@ def identify():
         return jsonify(error="No photo was sent."), 400
 
     photo_bytes = photo.read()
+    app.logger.info("Received photo: %d KB", len(photo_bytes) // 1024)
 
     if is_heic(photo_bytes):
         # Error E10: Pl@ntNet only accepts JPEG and PNG. Step 6 converts photos in the browser.

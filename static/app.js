@@ -3,6 +3,11 @@
 // Largest photo the server accepts (10 MB). The same limit is in app.py.
 const MAX_PHOTO_BYTES = 10 * 1024 * 1024;
 
+// Photos are shrunk so their longest side is at most this many pixels before uploading.
+// Tested in step 6a: Pl@ntNet gave essentially the same answer for a 1600-pixel copy.
+const MAX_PHOTO_PIXELS = 1600;
+const JPEG_QUALITY = 0.85;
+
 const startSection = document.getElementById("start");
 const previewSection = document.getElementById("preview");
 const resultSection = document.getElementById("result");
@@ -132,10 +137,33 @@ function showResult(result) {
   showState(resultSection);
 }
 
+// Make a smaller JPEG copy of the photo (SPEC.md step 6): much faster to upload on a walk.
+// The copy holds only pixels, so hidden data such as GPS location is left behind.
+// HEIC photos come out as JPEG too, which is all Pl@ntNet accepts.
+// If this browser can't read the photo, send the original; the server still checks it.
+async function shrinkPhoto(file) {
+  try {
+    const image = await createImageBitmap(file); // turned the right way up, as the camera intended
+    const scale = Math.min(1, MAX_PHOTO_PIXELS / Math.max(image.width, image.height));
+
+    const canvas = document.createElement("canvas");
+    canvas.width = Math.round(image.width * scale);
+    canvas.height = Math.round(image.height * scale);
+    canvas.getContext("2d").drawImage(image, 0, 0, canvas.width, canvas.height);
+
+    const smaller = await new Promise(function (resolve) {
+      canvas.toBlob(resolve, "image/jpeg", JPEG_QUALITY);
+    });
+    return smaller || file;
+  } catch (error) {
+    return file;
+  }
+}
+
 // Send the photo to the server and show its reply.
-async function sendPhoto(file) {
+async function sendPhoto(photo) {
   const formData = new FormData();
-  formData.append("photo", file);
+  formData.append("photo", photo, "photo.jpg");
 
   let response;
   try {
@@ -165,7 +193,7 @@ async function sendPhoto(file) {
   showResult(await response.json());
 }
 
-function handlePhoto(event) {
+async function handlePhoto(event) {
   const file = event.target.files[0];
   if (!file) {
     return; // The person closed the picker without choosing anything.
@@ -176,17 +204,20 @@ function handlePhoto(event) {
     return;
   }
 
+  // Show the photo straight from the device while it's prepared and uploaded.
+  previewImage.src = URL.createObjectURL(file);
+  showState(previewSection);
+
+  const photo = await shrinkPhoto(file);
+
   // Checked here too, so a huge photo isn't uploaded only to be refused.
-  if (file.size > MAX_PHOTO_BYTES) {
+  // Checked after shrinking, so a big photo that shrinks small enough is fine.
+  if (photo.size > MAX_PHOTO_BYTES) {
     showProblem("That photo is too large (over 10 MB). Please choose a smaller one."); // E9
     return;
   }
 
-  // Show the photo straight from the device while it uploads.
-  previewImage.src = URL.createObjectURL(file);
-  showState(previewSection);
-
-  sendPhoto(file);
+  sendPhoto(photo);
 }
 
 function startOver() {

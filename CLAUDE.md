@@ -116,7 +116,7 @@ Setup done: Python 3.15.0 installed from python.org, with certificates set up.
 **Step 5 complete** (git tag `step-5`).
 5.5 done: "Did you know?" box (server in `wikipedia.py`, page in `app.js`). 53 tests. Checked on the phone.
 **Step 5.5 complete** (git tag `step-5.5`).
-Next: step 6, error handling and photo shrinking (plan its small steps first).
+6a built: `shrinkPhoto()` in `app.js` (longest side 1600 px, JPEG 0.85; strips EXIF/GPS; falls back to the original). Measured on the bouquet: Pl@ntNet gives identical results for the same photo twice; the 1600-px copy (518 KB vs 2.8 MB) gave the same top two guesses. The server log shows "Received photo: N KB". Waiting for the phone check.
 
 ## Environment notes
 
