@@ -86,7 +86,16 @@ def identify():
     if not reply.get("results"):
         return jsonify(error=E4_NO_FLOWER), 404
 
-    return jsonify(summarise(reply))
+    summary = summarise(reply)
+    # Show in Terminal what Pl@ntNet said, to help understand surprising results.
+    for candidate in summary["candidates"]:
+        app.logger.info(
+            "  %s%%  %s  (common name: %s)",
+            candidate["confidence"],
+            candidate["scientific_name"],
+            candidate["common_name"] or "none from Pl@ntNet",
+        )
+    return jsonify(summary)
 
 
 def plantnet_error(response):

@@ -236,7 +236,12 @@ What this version deliberately does **not** do. If a new idea comes up while bui
 
 ### Later ideas (maybe after step 8)
 
-- **Several photos per identification** (flower plus leaf, and so on) for better accuracy.
+- **Better accuracy (phase 2).** Real-world tests in step 4g gave low confidence. Ideas to try, measuring scores before and after each change on the same test photos:
+  - Tell Pl@ntNet the photo shows a flower (`organs=flower` instead of `auto`).
+  - **Several photos per identification** (flower plus leaf, and so on). Pl@ntNet allows up to 5.
+  - Let me crop to the flower before sending.
+  - Photo tips on the start screen ("one flower, filling the frame, in focus").
+  - Use a regional plant list instead of the whole world, for where I live.
 - **Tap a candidate** on the unsure screen to swap in its Wikipedia summary.
 - **History** of flowers I've identified, with photos and dates.
 - **Location:** where I saw each flower, on a map.
