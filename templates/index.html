@@ -49,11 +49,6 @@
         <ul id="candidate-list" class="candidates"></ul>
       </div>
 
-      <p class="small-print">
-        The image-based plant species identification service used, is based on the Pl@ntNet recognition API,
-        regularly updated and accessible through the site <a href="https://my.plantnet.org/">https://my.plantnet.org/</a>
-      </p>
-
       <!-- The Wikipedia part: a summary of the best guess, or a W1/W2 message -->
       <div class="wikipedia">
         <p id="wikipedia-summary"></p>
@@ -63,6 +58,12 @@
         </p>
         <p id="wikipedia-problem" class="note"></p>
       </div>
+
+      <!-- Pl@ntNet's requested acknowledgement, at the bottom so it doesn't push the summary out of view -->
+      <p class="small-print">
+        The image-based plant species identification service used, is based on the Pl@ntNet recognition API,
+        regularly updated and accessible through the site <a href="https://my.plantnet.org/">https://my.plantnet.org/</a>
+      </p>
 
       <button class="button" type="button" data-action="start-over">Identify another flower</button>
     </section>

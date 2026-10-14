@@ -40,9 +40,13 @@ button.button {
   font-family: inherit;
 }
 
+/* At most a quarter of the screen tall, so the names and summary stay in view.
+   object-fit: cover crops the edges neatly instead of squashing the photo. */
 .photo {
   display: block;
-  max-width: 100%;
+  width: 100%;
+  max-height: 25vh;
+  object-fit: cover;
   border-radius: 12px;
 }
 
@@ -94,8 +98,6 @@ button.button {
 }
 
 .small-print {
-  padding-bottom: 16px;
-  border-bottom: 1px solid #cccccc; /* the line that separates the two sources */
   font-size: 13px;
   color: #555555;
 }
@@ -105,9 +107,10 @@ button.button {
   overflow-wrap: anywhere; /* lets the long link wrap on narrow phones */
 }
 
-/* The Wikipedia part, between two dividing lines */
+/* The Wikipedia part, between two dividing lines that separate it from Pl@ntNet's part */
 .wikipedia {
-  margin-bottom: 16px;
+  margin: 16px 0;
+  border-top: 1px solid #cccccc;
   border-bottom: 1px solid #cccccc;
 }
 
