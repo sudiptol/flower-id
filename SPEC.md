@@ -147,15 +147,15 @@ The app is **one page** that changes between five states. Sketches are phone wid
 Pass/fail checks for each user story. A story is **done** only when every box can be ticked. The numbers match section 2.
 
 **1. Take a photo**
-- [ ] On my phone, tapping **Take a photo** opens the camera directly.
-- [ ] After I take the photo, the app moves to the Working state (B) without any extra taps.
+- [x] On my phone, tapping **Take a photo** opens the camera directly.
+- [x] After I take the photo, the app moves to the Working state (B) without any extra taps.
 - [ ] On my Mac (no camera prompt), **Take a photo** simply opens the file picker, like **Choose a photo**.
 
 **2. Choose a saved photo**
-- [ ] On my phone, tapping **Choose a photo** opens my photo library.
-- [ ] On my Mac, the same button opens a file picker.
-- [ ] Photos straight from my phone work, including iPhone's HEIC format.
-- [ ] If I pick something that isn't an image (like a PDF), I see a clear message and nothing is sent to Pl@ntNet.
+- [x] On my phone, tapping **Choose a photo** opens my photo library.
+- [x] On my Mac, the same button opens a file picker.
+- [ ] Photos straight from my phone work, including iPhone's HEIC format. *(Preview works; the full test is when the photo reaches the server in step 3.)*
+- [x] If I pick something that isn't an image (like a PDF), I see a clear message and nothing is sent to Pl@ntNet.
 
 **3. See the name**
 - [ ] The top result's scientific name is the largest text on the result screen.
@@ -185,7 +185,7 @@ Pass/fail checks for each user story. A story is **done** only when every box ca
 
 **Overall**
 - [ ] On home Wi-Fi, a result appears within 10 seconds of choosing a photo.
-- [ ] Everything fits the phone screen width with no sideways scrolling.
+- [x] Everything fits the phone screen width with no sideways scrolling.
 - [ ] *(Added in step 6)* Photos are shrunk in the browser to about 1 MB before uploading, so results come quickly on weak mobile signal.
 - [ ] *(Added in step 6)* The hidden location data (GPS) that phones store inside photos is removed before uploading. Shrinking the photo in the browser does this automatically; we check it.
 

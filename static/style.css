@@ -33,7 +33,35 @@ h1 {
   cursor: pointer;
 }
 
+/* Make real <button> elements look the same as the photo buttons */
+button.button {
+  width: 100%;
+  border: none;
+  font-family: inherit;
+}
+
+.photo {
+  display: block;
+  max-width: 100%;
+  border-radius: 12px;
+}
+
+.note {
+  text-align: center;
+  color: #555555;
+}
+
+/* Warning box for problems: what happened and what to do */
+.problem {
+  padding: 16px;
+  border: 2px solid #b3261e;
+  border-radius: 12px;
+  background: #fdecea;
+  color: #1a1a1a;
+}
+
 /* Show a clear outline when the button is reached with the keyboard */
+button.button:focus-visible,
 input:focus-visible + .button {
   outline: 3px solid #f2a900;
   outline-offset: 3px;

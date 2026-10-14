@@ -43,7 +43,12 @@ A personal learning project. It's a phone-friendly web page where I take or uplo
    - 2e. Start screen (state A): the two photo buttons
    - 2f. Photo preview after picking, plus the non-image message (E1) and Start over
    - 2g. Check against acceptance criteria 1 and 2 on phone and Mac, then commit
-3. Backend receives the image
+3. Backend receives the image, in small steps:
+   - 3a. Server route `/identify` that accepts a photo and replies with its details (no Pl@ntNet yet)
+   - 3b. Browser sends the photo, shows "Identifying..." and displays the server's reply
+   - 3c. Server double-checks the file: images only, size limit (never trust the browser)
+   - 3d. First automated tests with pytest (ask before installing)
+   - 3e. Check on phone (including a real HEIC photo) and commit
 4. Pl@ntNet call
 5. Wikipedia lookup and two-source display
 6. Error handling, plus shrinking photos to about 1 MB in the browser before upload
@@ -66,7 +71,9 @@ Setup done: Python 3.15.0 installed from python.org, with certificates set up.
 2c done: `app.py` shows "Hello from Flower ID"; tested by me in the Mac browser.
 2d done: the phone opens the app over home Wi-Fi (`host="0.0.0.0"`).
 2e done: start screen with two photo buttons (`templates/index.html`, `static/style.css`); camera and library tested on the phone.
-Next: 2f, photo preview, non-image message (E1) and Start over.
+2f done: photo preview, non-image message (E1) and Start over (`static/app.js`).
+**Step 2 complete** (git tag `step-2`): acceptance boxes ticked in `SPEC.md`. Still open: "Take a photo" on the Mac, and the full HEIC check in step 3.
+Next: 3a, the `/identify` route.
 
 ## Environment notes
 
@@ -74,6 +81,7 @@ Next: 2f, photo preview, non-image message (E1) and Start over.
 - After installing or upgrading a package, update `requirements.txt` with `pip freeze > requirements.txt` and commit it. Rebuild the environment with `pip install -r requirements.txt`.
 - Project packages live in `.venv`. Turn it on with `source .venv/bin/activate` (prompt shows `(.venv)`), off with `deactivate`.
 - Find the Mac's Wi-Fi address with `ipconfig getifaddr en0` (it was 192.168.86.23 on 2026-10-14; it can change). The phone opens `http://<that address>:5001`.
+- **Testing on the phone (Safari):** after code changes, close the tab and open a fresh one. A plain refresh can keep the old page and make a working change look broken.
 - The app runs on port **5001**, not Flask's usual 5000, because macOS's AirPlay Receiver uses 5000.
 - Homebrew is installed but too old to run on this macOS version, so don't rely on it.
 

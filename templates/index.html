@@ -20,6 +20,21 @@
       <input class="visually-hidden" id="library-input" type="file" accept="image/*">
       <label class="button" for="library-input">Choose a photo</label>
     </section>
+
+    <!-- State B: Working. For now it only shows the photo; identifying comes in step 4. -->
+    <section id="preview" hidden>
+      <img id="preview-image" class="photo" alt="The photo you chose">
+      <p class="note">Photo ready. Identifying it comes in a later step.</p>
+      <button class="button" type="button" data-action="start-over">Start over</button>
+    </section>
+
+    <!-- State E: Problem -->
+    <section id="problem" hidden>
+      <p id="problem-message" class="problem" role="alert"></p>
+      <button class="button" type="button" data-action="start-over">Start over</button>
+    </section>
   </main>
+
+  <script src="{{ url_for('static', filename='app.js') }}"></script>
 </body>
 </html>
