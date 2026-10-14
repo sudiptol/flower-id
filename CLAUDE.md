@@ -61,11 +61,13 @@ Setup done: Python 3.15.0 installed from python.org, with certificates set up.
 1f done: error cases approved, in `SPEC.md` section 5.
 1g done: out of scope approved, in `SPEC.md` section 6.
 **Step 1 complete:** spec signed off (git tag `spec-v1`). `SPEC.md` is the source of truth; check work against it.
-Next: 2a, create the virtual environment.
+2a done: virtual environment created in `.venv` (Python 3.15.0, ignored by git).
+Next: 2b, install Flask (ask first).
 
 ## Environment notes
 
 - Use `python3` (3.15.0, at `/Library/Frameworks/Python.framework/Versions/3.15/`). An old Python 3.9 is also on the Mac; ignore it.
+- Project packages live in `.venv`. Turn it on with `source .venv/bin/activate` (prompt shows `(.venv)`), off with `deactivate`.
 - Homebrew is installed but too old to run on this macOS version, so don't rely on it.
 
 ## Still to do in later steps
