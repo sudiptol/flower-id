@@ -5,6 +5,7 @@ A personal learning project. It's a phone-friendly web page where I take or uplo
 ## Decisions made
 
 - **Stack:** Python + Flask. One small app serves both the page and the backend.
+- **Web app, not native:** opened in the phone's browser. No Xcode or App Store. During development the phone reaches the Mac over home Wi-Fi; after step 7 it has a public `https://` address.
 - **Identification:** Pl@ntNet API (free tier, 500 requests per day). It needs an account and an API key, and their terms require an attribution line.
 - **Reference text:** Wikipedia API (no key needed). Link to the article and credit Wikipedia. Requests must send a descriptive `User-Agent` header, or Wikipedia returns 403 Forbidden.
 - **Two sources, always shown separately:**
@@ -47,7 +48,8 @@ A personal learning project. It's a phone-friendly web page where I take or uplo
 Setup done: Python 3.15.0 installed from python.org, with certificates set up.
 1a done: git started (branch `main`), `.gitignore` created.
 1b done: problem statement approved, in `SPEC.md` section 1.
-1c done: user stories approved, in `SPEC.md` section 2 (show common name too; one photo per identification). Next: 1d, screen sketch.
+1c done: user stories approved, in `SPEC.md` section 2 (show common name too; one photo per identification).
+1d done: screen sketch approved, in `SPEC.md` section 3, plus "How I open the app". Next: 1e, acceptance criteria.
 
 ## Environment notes
 

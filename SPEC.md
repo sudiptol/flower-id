@@ -32,3 +32,119 @@ Format: *I can [do something] so that [reason]*. Ordered by importance.
 
 - **Common name:** yes. Show it in smaller text under the scientific name when Pl@ntNet provides one.
 - **Photos per identification:** one. Sending several photos of the same plant is a later idea (see Out of scope).
+
+## 3. Screen sketch
+
+The app is **one page** that changes between five states. Sketches are phone width.
+
+### A. Start
+
+```
++------------------------------+
+|        Flower ID             |
+|                              |
+|  +------------------------+  |
+|  |   [ Take a photo ]     |  |   <- opens the camera
+|  +------------------------+  |
+|  +------------------------+  |
+|  |   [ Choose a photo ]   |  |   <- opens saved photos
+|  +------------------------+  |
+|                              |
++------------------------------+
+```
+
+### B. Working
+
+```
++------------------------------+
+|        Flower ID             |
+|  +------------------------+  |
+|  |   (photo preview)      |  |
+|  +------------------------+  |
+|      Identifying...          |
++------------------------------+
+```
+
+### C. Result: confident (50% or more)
+
+```
++------------------------------+
+|  +------------------------+  |
+|  |   (photo preview)      |  |
+|  +------------------------+  |
+|                              |
+|  Bellis perennis             |   <- headline
+|  Common daisy                |   <- smaller
+|                              |
+|  Identified by Pl@ntNet      |
+|  (confidence 92%)            |
+|  ----------------------------|
+|  The daisy is a common       |
+|  European species... (short  |
+|  Wikipedia summary)          |
+|                              |
+|  Reference: Wikipedia        |
+|  [Read the full article]     |
+|  ----------------------------|
+|  [ Identify another flower ] |
++------------------------------+
+```
+
+### D. Result: unsure (below 50%)
+
+```
++------------------------------+
+|  +------------------------+  |
+|  |   (photo preview)      |  |
+|  +------------------------+  |
+|  ! Not sure about this one.  |   <- visible warning box
+|  ! Compare the options below.|
+|                              |
+|  Best guess:                 |
+|  Rosa canina   Dog rose  38% |
+|                              |
+|  Other candidates:           |
+|  Rosa rubiginosa         21% |
+|  Rosa arvensis           12% |
+|                              |
+|  Identified by Pl@ntNet      |
+|  ----------------------------|
+|  (Wikipedia summary of the   |
+|   best guess, with credit)   |
+|  ----------------------------|
+|  [ Identify another flower ] |
++------------------------------+
+```
+
+### E. Problem
+
+```
++------------------------------+
+|        Flower ID             |
+|                              |
+|  ! Couldn't connect.         |   <- what happened
+|    Check your signal and     |   <- what to do
+|    try again.                |
+|                              |
+|  [ Try again ]               |
+|  [ Start over ]              |
++------------------------------+
+```
+
+### Layout rules
+
+- One column, big tap targets, readable in sunlight (dark text on light background).
+- The two sources are always visually separate, divided by a line.
+- The Pl@ntNet attribution appears on every result.
+
+### Decision
+
+- **Candidates on the unsure screen:** each candidate's name links to its Wikipedia article in a new tab. Swapping the summary in place is a later idea.
+
+## How I open the app
+
+This is a **web app**, not a native iPhone app: no Xcode, no App Store. I open it in my phone's web browser.
+
+- **While building (steps 2–6):** the app runs on my Mac. My phone opens it by typing the Mac's local address (like `http://192.168.1.20:5000`) into the browser. This only works at home, with both devices on the same Wi-Fi.
+- **Once online (step 7):** the app lives on a hosting service with a normal `https://` web address, so it works anywhere, including on walks.
+- **App-like feel:** in the phone browser, "Add to Home Screen" gives it an icon like a real app.
