@@ -186,6 +186,40 @@ Pass/fail checks for each user story. A story is **done** only when every box ca
 - [ ] Everything fits the phone screen width with no sideways scrolling.
 - [ ] *(Added in step 6)* Photos are shrunk in the browser to about 1 MB before uploading, so results come quickly on weak mobile signal.
 
+## 5. Error cases
+
+Every way the app can fail, and exactly what I see. The exact error codes Pl@ntNet sends are confirmed in step 4.
+
+### Full failures (show the Problem state, E)
+
+| # | What went wrong | Message I see | Buttons |
+|---|---|---|---|
+| E1 | The file isn't an image (like a PDF) | "That file isn't a photo. Please choose a JPG, PNG or HEIC image." | Start over |
+| E2 | My phone can't reach the app (no signal) | "Couldn't connect. Check your signal and try again." | Try again, Start over |
+| E3 | Pl@ntNet takes too long (no reply within 20 seconds) | "Identification is taking too long. Please try again." | Try again, Start over |
+| E4 | Pl@ntNet finds no plant in the photo | "No flower recognised. Try a closer, sharper photo with the flower filling the frame." | Start over |
+| E5 | Daily limit reached (500 used) | "Daily limit reached. Identification will work again tomorrow." | Start over |
+| E6 | Pl@ntNet rejects the API key (missing, wrong or expired) | "Setup problem: the Pl@ntNet key isn't working. Check the .env file." | Start over |
+| E7 | Pl@ntNet is down | "Pl@ntNet isn't responding right now. Try again in a few minutes." | Try again, Start over |
+| E8 | Anything unexpected | "Something went wrong. Please try again." | Try again, Start over |
+
+### Partial failures (still show the result)
+
+If Pl@ntNet worked but Wikipedia didn't, the identification is still useful, so I still see it.
+
+| # | What went wrong | What I see |
+|---|---|---|
+| W1 | Wikipedia has no article for this name | Result as usual, with "No Wikipedia article found" in place of the summary |
+| W2 | Wikipedia is slow (no reply within 5 seconds) or down | Result as usual, with "Couldn't load the Wikipedia summary right now" in place of the summary |
+
+### Rules for all errors
+
+- **Two audiences:** I see a short, friendly message. The full technical details are written to the server's log (the Terminal window running the app) so I can investigate. Technical details never go on the page.
+- **Never show secrets:** error messages and logs never include the API key.
+- **Always a way out:** every error screen has at least a **Start over** button.
+- **Try again** only appears when trying again might actually help (E2, E3, E7, E8). It re-sends the same photo, so I don't have to retake it.
+- **Time limits:** the app always gives up waiting after a set time (20 seconds for Pl@ntNet, 5 for Wikipedia) instead of hanging forever.
+
 ## How I open the app
 
 This is a **web app**, not a native iPhone app: no Xcode, no App Store. I open it in my phone's web browser.

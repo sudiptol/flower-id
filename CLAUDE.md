@@ -50,7 +50,8 @@ Setup done: Python 3.15.0 installed from python.org, with certificates set up.
 1b done: problem statement approved, in `SPEC.md` section 1.
 1c done: user stories approved, in `SPEC.md` section 2 (show common name too; one photo per identification).
 1d done: screen sketch approved, in `SPEC.md` section 3, plus "How I open the app".
-1e done: acceptance criteria approved, in `SPEC.md` section 4 (photo shrinking deferred to step 6). Next: 1f, error cases.
+1e done: acceptance criteria approved, in `SPEC.md` section 4 (photo shrinking deferred to step 6).
+1f done: error cases approved, in `SPEC.md` section 5. Next: 1g, out of scope.
 
 ## Environment notes
 
