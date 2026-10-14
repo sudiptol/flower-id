@@ -88,7 +88,8 @@ Setup done: Python 3.15.0 installed from python.org, with certificates set up.
 **Step 3 complete** (git tag `step-3`).
 4a done: I have a Pl@ntNet account and key. Docs read (facts below). Decisions: Pl@ntNet's acknowledgement sentence goes under every result (text, no logo); the server refuses HEIC for now (E10) until step 6 converts photos to JPEG.
 4b done: key saved in `.env` (26 characters, checked without displaying it); `.env.example` is the template in git; python-dotenv 1.2.4 loads it in `app.py`.
-Next: 4c, `plantnet.py` and one real call (ask before installing `requests`).
+4c done: `plantnet.py` + `scripts/try_plantnet.py`. Real call with a mixed bouquet (`samples/IMG_2570.jpg`, ignored by git): status 200, top score only **2.6%** (Lisianthus), then Dutch Iris 1.6% and Bastard speedwell 0.8%. A real-world example of the under-50% case.
+Next: 4d, `/identify` returns the name, common name, confidence and top 3.
 
 ## Environment notes
 
@@ -110,6 +111,7 @@ Next: 4c, `plantnet.py` and one real call (ask before installing `requests`).
 - Quota: 500 per day, resets **00:00 UTC**; going over gives **HTTP 429**. Only one free account per person.
 - Photos aren't stored: kept in memory during identification only. A query history (date, time) is kept.
 - Suggested acknowledgement: "The image-based plant species identification service used, is based on the Pl@ntNet recognition API, regularly updated and accessible through the site https://my.plantnet.org/". Don't use their logo without checking its terms.
+- Fields to use: `results[i].score`, `results[i].species.scientificNameWithoutAuthor` (headline, may contain "×", e.g. "Iris × hollandica"), `results[i].species.commonNames[0]` (the list can be empty).
 - **Tested in 4c:** a bad key gives **401** (`"message": "Bad token"`); a photo with no plant gives **404** (`"message": "Species not found"`).
 
 ## Still to do in later steps

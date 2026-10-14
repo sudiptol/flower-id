@@ -10,6 +10,9 @@
 __pycache__/
 *.pyc
 
+# My own test photos (can contain hidden location data)
+samples/
+
 # pytest's cache of the last test run
 .pytest_cache/
 
