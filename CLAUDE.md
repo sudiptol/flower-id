@@ -46,7 +46,8 @@ A personal learning project. It's a phone-friendly web page where I take or uplo
 
 Setup done: Python 3.15.0 installed from python.org, with certificates set up.
 1a done: git started (branch `main`), `.gitignore` created.
-1b done: problem statement approved, in `SPEC.md` section 1. Next: 1c, user stories.
+1b done: problem statement approved, in `SPEC.md` section 1.
+1c done: user stories approved, in `SPEC.md` section 2 (show common name too; one photo per identification). Next: 1d, screen sketch.
 
 ## Environment notes
 
