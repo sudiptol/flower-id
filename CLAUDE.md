@@ -58,7 +58,7 @@ A personal learning project. It's a phone-friendly web page where I take or uplo
    - 4f. Tests that don't use the real API (no quota used, work offline)
    - 4g. Real flowers on the phone, then commit and tag
 5. Wikipedia lookup and two-source display
-6. Error handling, plus shrinking photos to about 1 MB in the browser before upload. Includes: the **Try again** button (E2, E3, E7, E8), time limits, and ignoring a late server reply if I've already pressed Start over.
+6. Error handling, plus shrinking photos to about 1 MB **and converting them to JPEG** in the browser before upload (this also removes E10, the HEIC refusal). Includes: the **Try again** button (E2, E3, E7, E8), time limits, and ignoring a late server reply if I've already pressed Start over.
 7. Put it online
 8. Review
 
@@ -86,7 +86,8 @@ Setup done: Python 3.15.0 installed from python.org, with certificates set up.
 3d done: pytest 9.1.1 installed; 11 tests in `tests/test_app.py`; dev-only tools pinned in `requirements-dev.txt`.
 3e done: real iPhone photos (camera and library) pass the server checks.
 **Step 3 complete** (git tag `step-3`).
-Next: 4a, Pl@ntNet account and API key (I do this myself) while Claude reads the API docs and terms.
+4a done: I have a Pl@ntNet account and key. Docs read (facts below). Decisions: Pl@ntNet's acknowledgement sentence goes under every result (text, no logo); the server refuses HEIC for now (E10) until step 6 converts photos to JPEG.
+Next: 4b, the key in `.env`, loaded with python-dotenv.
 
 ## Environment notes
 
@@ -98,6 +99,17 @@ Next: 4a, Pl@ntNet account and API key (I do this myself) while Claude reads the
 - **Testing on the phone (Safari):** after code changes, close the tab and open a fresh one. A plain refresh can keep the old page and make a working change look broken.
 - The app runs on port **5001**, not Flask's usual 5000, because macOS's AirPlay Receiver uses 5000.
 - Homebrew is installed but too old to run on this macOS version, so don't rely on it.
+
+## Pl@ntNet API facts (read from their docs on 2026-10-14)
+
+- `POST https://my-api.plantnet.org/v2/identify/all?api-key=KEY`, photos sent as form field `images`; optional `organs` (`auto`, `flower`, ...), `lang` (e.g. `en`), `nb-results`.
+- **The key goes in the URL**, so never log or show full request URLs or raw request errors (they can contain the URL).
+- Accepts **JPEG and PNG only** (no HEIC). Up to 5 images, 50 MB per request.
+- Reply: `results` sorted by `score` (0 to 1); each has `species.scientificNameWithoutAuthor` and `species.commonNames`; also `bestMatch` and `remainingIdentificationRequests`.
+- Quota: 500 per day, resets **00:00 UTC**; going over gives **HTTP 429**. Only one free account per person.
+- Photos aren't stored: kept in memory during identification only. A query history (date, time) is kept.
+- Suggested acknowledgement: "The image-based plant species identification service used, is based on the Pl@ntNet recognition API, regularly updated and accessible through the site https://my.plantnet.org/". Don't use their logo without checking its terms.
+- **Not documented:** the exact codes for a bad key or "no plant found". Confirm by trying it in 4c.
 
 ## Still to do in later steps
 

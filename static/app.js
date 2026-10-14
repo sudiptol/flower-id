@@ -85,7 +85,7 @@ function handlePhoto(event) {
   }
 
   if (!isImage(file)) {
-    showProblem("That file isn't a photo. Please choose a JPG, PNG or HEIC image."); // E1
+    showProblem("That file isn't a photo. Please choose a JPG or PNG image."); // E1
     return;
   }
 

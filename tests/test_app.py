@@ -44,23 +44,25 @@ def test_accepts_png(client):
     assert response.status_code == 200
 
 
-def test_accepts_heic(client):
-    response = upload(client, HEIC_BYTES, "flower.heic")
-    assert response.status_code == 200
-
-
 def test_accepts_photo_just_under_the_limit(client):
     almost_too_big = JPEG_BYTES + b"\x00" * (MAX_PHOTO_BYTES - 100_000)
     response = upload(client, almost_too_big)
     assert response.status_code == 200
 
 
-# --- Everything else is refused (SPEC.md errors E1 and E9) ---
+# --- Everything else is refused (SPEC.md errors E1, E9 and E10) ---
+
+def test_refuses_heic_with_its_own_message(client):
+    # Pl@ntNet only accepts JPEG and PNG.
+    response = upload(client, HEIC_BYTES, "flower.heic")
+    assert response.status_code == 400
+    assert response.get_json()["error"] == "HEIC photos can't be identified yet. Please use a JPG or PNG."
+
 
 def test_refuses_text_disguised_as_jpeg(client):
     response = upload(client, b"just some text", "sneaky.jpg")
     assert response.status_code == 400
-    assert response.get_json()["error"] == "That file isn't a photo. Please choose a JPG, PNG or HEIC image."
+    assert response.get_json()["error"] == "That file isn't a photo. Please choose a JPG or PNG image."
 
 
 def test_refuses_pdf(client):

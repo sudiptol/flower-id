@@ -137,6 +137,7 @@ The app is **one page** that changes between five states. Sketches are phone wid
 - One column, big tap targets, readable in sunlight (dark text on light background).
 - The two sources are always visually separate, divided by a line.
 - The Pl@ntNet attribution appears on every result.
+- Under every result, in small print, Pl@ntNet's requested acknowledgement, with the link: "The image-based plant species identification service used, is based on the Pl@ntNet recognition API, regularly updated and accessible through the site https://my.plantnet.org/". Text only, no Pl@ntNet logo.
 
 ### Decision
 
@@ -187,11 +188,11 @@ Pass/fail checks for each user story. A story is **done** only when every box ca
 **Overall**
 - [ ] On home Wi-Fi, a result appears within 10 seconds of choosing a photo.
 - [x] Everything fits the phone screen width with no sideways scrolling.
-- [ ] *(Added in step 6)* Photos are shrunk in the browser to about 1 MB before uploading, so results come quickly on weak mobile signal.
+- [ ] *(Added in step 6)* Photos are shrunk in the browser to about 1 MB and converted to JPEG before uploading, so results come quickly on weak mobile signal and HEIC files from the Mac work.
 - [ ] *(Added in step 6)* The hidden location data (GPS) that phones store inside photos is removed before uploading. Shrinking the photo in the browser does this automatically; we check it.
 
 **Before step 4**
-- [ ] Pl@ntNet's terms are read, and the attribution wording matches what they require.
+- [x] Pl@ntNet's terms are read, and the attribution wording matches what they require. *(Done in step 4a; see the layout rules in section 3.)*
 
 ## 5. Error cases
 
@@ -201,7 +202,7 @@ Every way the app can fail, and exactly what I see. The exact error codes Pl@ntN
 
 | # | What went wrong | Message I see | Buttons |
 |---|---|---|---|
-| E1 | The file isn't an image (like a PDF) | "That file isn't a photo. Please choose a JPG, PNG or HEIC image." | Start over |
+| E1 | The file isn't an image (like a PDF) | "That file isn't a photo. Please choose a JPG or PNG image." | Start over |
 | E2 | My phone can't reach the app (no signal) | "Couldn't connect. Check your signal and try again." | Try again, Start over |
 | E3 | Pl@ntNet takes too long (no reply within 20 seconds) | "Identification is taking too long. Please try again." | Try again, Start over |
 | E4 | Pl@ntNet finds no plant in the photo | "No flower recognised. Try a closer, sharper photo with the flower filling the frame." | Start over |
@@ -210,6 +211,7 @@ Every way the app can fail, and exactly what I see. The exact error codes Pl@ntN
 | E7 | Pl@ntNet is down | "Pl@ntNet isn't responding right now. Try again in a few minutes." | Try again, Start over |
 | E8 | Anything unexpected | "Something went wrong. Please try again." | Try again, Start over |
 | E9 | The photo is over 10 MB *(added in step 3c)* | "That photo is too large (over 10 MB). Please choose a smaller one." | Start over |
+| E10 | A HEIC file, e.g. uploaded from the Mac; Pl@ntNet only accepts JPEG and PNG *(added in step 4a; goes away in step 6, when the browser converts photos to JPEG)* | "HEIC photos can't be identified yet. Please use a JPG or PNG." | Start over |
 
 ### Partial failures (still show the result)
 
@@ -246,7 +248,7 @@ What this version deliberately does **not** do. If a new idea comes up while bui
 
 - **User accounts or sign-up.** It's just me. (A simple lock to protect my daily limit *is* in scope, at step 7.)
 - **Working offline.** Identification needs Pl@ntNet, so there's no signal, no result. The app only has to fail clearly (error E2).
-- **Saving my photos.** My app passes each photo to Pl@ntNet and keeps no copy. What Pl@ntNet does with uploaded photos is set by its terms, which get checked in step 4.
+- **Saving my photos.** My app passes each photo to Pl@ntNet and keeps no copy. Pl@ntNet's terms say they don't store photos either: they're kept in memory only during identification.
 - **Polished visual design**, such as custom fonts, animations or dark mode. Clean and readable is enough.
 - **English only:** English Wikipedia and English common names.
 

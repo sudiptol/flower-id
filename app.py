@@ -11,15 +11,17 @@ app = Flask(__name__)
 app.config["MAX_CONTENT_LENGTH"] = MAX_PHOTO_BYTES
 
 
-def is_image(data):
+def is_jpeg_or_png(data):
     """Check the file's first bytes, because the label the sender gives can be wrong."""
     if data.startswith(b"\xff\xd8\xff"):
         return True  # JPEG
     if data.startswith(b"\x89PNG\r\n\x1a\n"):
         return True  # PNG
-    if data[4:8] == b"ftyp" and data[8:12] in HEIC_BRANDS:
-        return True  # HEIC
     return False
+
+
+def is_heic(data):
+    return data[4:8] == b"ftyp" and data[8:12] in HEIC_BRANDS
 
 
 @app.route("/")
@@ -36,9 +38,13 @@ def identify():
 
     photo_bytes = photo.read()
 
-    if not is_image(photo_bytes):
+    if is_heic(photo_bytes):
+        # Error E10: Pl@ntNet only accepts JPEG and PNG. Step 6 converts photos in the browser.
+        return jsonify(error="HEIC photos can't be identified yet. Please use a JPG or PNG."), 400
+
+    if not is_jpeg_or_png(photo_bytes):
         # Error E1 from SPEC.md section 5.
-        return jsonify(error="That file isn't a photo. Please choose a JPG, PNG or HEIC image."), 400
+        return jsonify(error="That file isn't a photo. Please choose a JPG or PNG image."), 400
 
     # For now, just report what arrived. Pl@ntNet comes in step 4.
     return jsonify(
