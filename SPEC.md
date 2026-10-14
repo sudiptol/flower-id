@@ -220,6 +220,28 @@ If Pl@ntNet worked but Wikipedia didn't, the identification is still useful, so 
 - **Try again** only appears when trying again might actually help (E2, E3, E7, E8). It re-sends the same photo, so I don't have to retake it.
 - **Time limits:** the app always gives up waiting after a set time (20 seconds for Pl@ntNet, 5 for Wikipedia) instead of hanging forever.
 
+## 6. Out of scope
+
+What this version deliberately does **not** do. If a new idea comes up while building, it goes on the "Later ideas" list instead of into the current step.
+
+### Later ideas (maybe after step 8)
+
+- **Several photos per identification** (flower plus leaf, and so on) for better accuracy.
+- **Tap a candidate** on the unsure screen to swap in its Wikipedia summary.
+- **History** of flowers I've identified, with photos and dates.
+- **Location:** where I saw each flower, on a map.
+- **Share** a result with someone.
+- **Other languages** for names and summaries.
+- **A native iPhone app** built in Xcode.
+
+### Not in this version
+
+- **User accounts or sign-up.** It's just me. (A simple lock to protect my daily limit *is* in scope, at step 7.)
+- **Working offline.** Identification needs Pl@ntNet, so there's no signal, no result. The app only has to fail clearly (error E2).
+- **Saving my photos.** Each photo is sent to Pl@ntNet and then thrown away. Nothing is stored on the server.
+- **Polished visual design**, such as custom fonts, animations or dark mode. Clean and readable is enough.
+- **English only:** English Wikipedia and English common names.
+
 ## How I open the app
 
 This is a **web app**, not a native iPhone app: no Xcode, no App Store. I open it in my phone's web browser.
