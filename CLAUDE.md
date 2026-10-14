@@ -59,7 +59,7 @@ A personal learning project. It's a phone-friendly web page where I take or uplo
    - 4g. Real flowers on the phone, then commit and tag
 5. Wikipedia lookup and two-source display
 6. Error handling, plus shrinking photos to about 1 MB **and converting them to JPEG** in the browser before upload (this also removes E10, the HEIC refusal). Includes: the **Try again** button (E2, E3, E7, E8), time limits, and ignoring a late server reply if I've already pressed Start over.
-7. Put it online
+7. Put it online. Include an app icon (`apple-touch-icon.png`, `favicon.ico`): Safari asks for them, currently getting 404s.
 8. Review
 
 ## Current step
