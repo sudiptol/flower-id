@@ -110,7 +110,7 @@ Next: 4c, `plantnet.py` and one real call (ask before installing `requests`).
 - Quota: 500 per day, resets **00:00 UTC**; going over gives **HTTP 429**. Only one free account per person.
 - Photos aren't stored: kept in memory during identification only. A query history (date, time) is kept.
 - Suggested acknowledgement: "The image-based plant species identification service used, is based on the Pl@ntNet recognition API, regularly updated and accessible through the site https://my.plantnet.org/". Don't use their logo without checking its terms.
-- **Not documented:** the exact codes for a bad key or "no plant found". Confirm by trying it in 4c.
+- **Tested in 4c:** a bad key gives **401** (`"message": "Bad token"`); a photo with no plant gives **404** (`"message": "Species not found"`).
 
 ## Still to do in later steps
 
