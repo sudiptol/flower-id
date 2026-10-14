@@ -13,6 +13,16 @@ const JPEG_QUALITY = 0.85;
 // so the page never gives up on an answer that was about to arrive.
 const PAGE_TIMEOUT_MS = 35 * 1000;
 
+// Messages the page shows by itself (SPEC.md section 5). The server sends its own.
+const E1_NOT_A_PHOTO = "That file isn't a photo. Please choose a JPG or PNG image.";
+const E2_NO_CONNECTION = "Couldn't connect. Check your signal and try again.";
+const E3_TOO_SLOW = "Identification is taking too long. Please try again.";
+const E8_UNEXPECTED = "Something went wrong. Please try again.";
+const E9_TOO_LARGE = "That photo is too large (over 10 MB). Please choose a smaller one.";
+
+// The photo being identified (already shrunk), kept so "Try again" can send it again.
+let currentPhoto = null;
+
 const startSection = document.getElementById("start");
 const previewSection = document.getElementById("preview");
 const resultSection = document.getElementById("result");
@@ -23,6 +33,7 @@ const libraryInput = document.getElementById("library-input");
 const previewImage = document.getElementById("preview-image");
 const resultImage = document.getElementById("result-image");
 const problemMessage = document.getElementById("problem-message");
+const tryAgainButton = document.getElementById("try-again");
 
 // Show one state and hide the others.
 function showState(section) {
@@ -34,8 +45,10 @@ function showState(section) {
 }
 
 // Show the Problem state (E) with one of the messages from SPEC.md section 5.
-function showProblem(message) {
+// canRetry shows the "Try again" button: only when sending the same photo again might work.
+function showProblem(message, canRetry) {
   problemMessage.textContent = message;
+  tryAgainButton.hidden = !canRetry;
   showState(problemSection);
 }
 
@@ -179,27 +192,29 @@ async function sendPhoto(photo) {
     });
   } catch (error) {
     if (error.name === "TimeoutError") {
-      showProblem("Identification is taking too long. Please try again."); // E3
+      showProblem(E3_TOO_SLOW, true);
     } else {
       // Otherwise fetch only fails like this when the server can't be reached at all.
-      showProblem("Couldn't connect. Check your signal and try again."); // E2
+      showProblem(E2_NO_CONNECTION, true);
     }
     return;
   }
 
   if (!response.ok) {
-    // Our server explains known problems (E1, E3-E7, E9, E10) in an "error" field.
-    // Anything else, such as a crash, gets the general message E8.
-    let message = "Something went wrong. Please try again.";
+    // Our server explains known problems (E1, E3-E7, E9, E10) in an "error" field,
+    // and says whether trying again could help. Anything else, such as a crash, is E8.
+    let message = E8_UNEXPECTED;
+    let canRetry = true;
     try {
       const reply = await response.json();
       if (reply.error) {
         message = reply.error;
+        canRetry = reply.can_retry === true;
       }
     } catch (error) {
       // The reply wasn't JSON, so keep the general message.
     }
-    showProblem(message);
+    showProblem(message, canRetry);
     return;
   }
 
@@ -208,11 +223,7 @@ async function sendPhoto(photo) {
     result = await response.json();
   } catch (error) {
     // The deadline can also run out while the reply is still downloading.
-    if (error.name === "TimeoutError") {
-      showProblem("Identification is taking too long. Please try again."); // E3
-    } else {
-      showProblem("Something went wrong. Please try again."); // E8
-    }
+    showProblem(error.name === "TimeoutError" ? E3_TOO_SLOW : E8_UNEXPECTED, true);
     return;
   }
   showResult(result);
@@ -225,7 +236,7 @@ async function handlePhoto(event) {
   }
 
   if (!isImage(file)) {
-    showProblem("That file isn't a photo. Please choose a JPG or PNG image."); // E1
+    showProblem(E1_NOT_A_PHOTO, false);
     return;
   }
 
@@ -238,11 +249,18 @@ async function handlePhoto(event) {
   // Checked here too, so a huge photo isn't uploaded only to be refused.
   // Checked after shrinking, so a big photo that shrinks small enough is fine.
   if (photo.size > MAX_PHOTO_BYTES) {
-    showProblem("That photo is too large (over 10 MB). Please choose a smaller one."); // E9
+    showProblem(E9_TOO_LARGE, false);
     return;
   }
 
+  currentPhoto = photo;
   sendPhoto(photo);
+}
+
+// Send the same photo again, without retaking or choosing it.
+function tryAgain() {
+  showState(previewSection);
+  sendPhoto(currentPhoto);
 }
 
 function startOver() {
@@ -251,6 +269,7 @@ function startOver() {
     previewImage.removeAttribute("src");
     resultImage.removeAttribute("src");
   }
+  currentPhoto = null;
   // Clear the pickers so choosing the same photo again still works.
   cameraInput.value = "";
   libraryInput.value = "";
@@ -259,6 +278,7 @@ function startOver() {
 
 cameraInput.addEventListener("change", handlePhoto);
 libraryInput.addEventListener("change", handlePhoto);
+tryAgainButton.addEventListener("click", tryAgain);
 
 document.querySelectorAll("[data-action='start-over']").forEach(function (button) {
   button.addEventListener("click", startOver);

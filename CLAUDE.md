@@ -118,13 +118,15 @@ Setup done: Python 3.15.0 installed from python.org, with certificates set up.
 **Step 5.5 complete** (git tag `step-5.5`).
 6a built: `shrinkPhoto()` in `app.js` (longest side 1600 px, JPEG 0.85; strips EXIF/GPS; falls back to the original). Measured on the bouquet: Pl@ntNet gives identical results for the same photo twice; the 1600-px copy (518 KB vs 2.8 MB) gave the same top two guesses. The server log shows "Received photo: N KB". Phone check: 531 KB (was about 2,000), right way up, identification normal.
 6b done: the page gives up after 35 s (`PAGE_TIMEOUT_MS`, via `AbortSignal.timeout`) and shows E3, including when the reply stalls mid-download. No signal still shows E2.
-Next: 6c, the Try again button.
+6c done: every server error carries `can_retry` (via `error_reply()` in `app.py`); the page shows **Try again** only then (E2, E3, E7, E8) and re-sends the same shrunk photo. Page messages are named constants in `app.js`. 56 tests.
+Next: 6d, ignore a late reply after Start over.
 
 ## Environment notes
 
 - Use `python3` (3.15.0, at `/Library/Frameworks/Python.framework/Versions/3.15/`). An old Python 3.9 is also on the Mac; ignore it.
 - Two package lists: `requirements.txt` holds what the app needs to run (also used online), and `requirements-dev.txt` adds tools only needed on the Mac, like pytest. After adding a package, put it in the right file with its exact version, and commit. Rebuild everything with `pip install -r requirements-dev.txt`.
 - When breaking code on purpose to prove a test works, commit the file first so `git checkout` can restore it (or undo by hand and search for leftovers).
+- When testing the page, check what is **actually drawn** (`element.checkVisibility()`, screenshots), not just the `hidden` property: a CSS `display` rule once overrode `hidden` (fixed with a global `[hidden] { display: none !important; }`). Wait for the page to settle rather than using fixed delays.
 - **Run the tests before every commit:** `python -m pytest` (with `.venv` active). Add tests for each new behaviour, including failures.
 - Project packages live in `.venv`. Turn it on with `source .venv/bin/activate` (prompt shows `(.venv)`), off with `deactivate`.
 - Find the Mac's Wi-Fi address with `ipconfig getifaddr en0` (it was 192.168.86.23 on 2026-10-14; it can change). The phone opens `http://<that address>:5001`.
