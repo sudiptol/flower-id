@@ -199,8 +199,8 @@ Pass/fail checks for each user story. A story is **done** only when every box ca
 **Overall**
 - [ ] On home Wi-Fi, a result appears within 10 seconds of choosing a photo.
 - [x] Everything fits the phone screen width with no sideways scrolling.
-- [ ] *(Added in step 6)* Photos are shrunk in the browser to about 1 MB and converted to JPEG before uploading, so results come quickly on weak mobile signal and HEIC files from the Mac work.
-- [ ] *(Added in step 6)* The hidden location data (GPS) that phones store inside photos is removed before uploading. Shrinking the photo in the browser does this automatically; we check it.
+- [x] *(Added in step 6)* Photos are shrunk in the browser to about 1 MB and converted to JPEG before uploading, so results come quickly on weak mobile signal and HEIC files from the Mac work. *(Step 6a: longest side 1600 px; a real iPhone photo arrived at 531 KB instead of about 2,000 KB.)*
+- [x] *(Added in step 6)* The hidden location data (GPS) that phones store inside photos is removed before uploading. Shrinking the photo in the browser does this automatically; we check it. *(Step 6a: tested with a photo carrying fake GPS data.)*
 
 **Before step 4**
 - [x] Pl@ntNet's terms are read, and the attribution wording matches what they require. *(Done in step 4a; see the layout rules in section 3.)*
@@ -222,7 +222,7 @@ Every way the app can fail, and exactly what I see. The exact error codes Pl@ntN
 | E7 | Pl@ntNet is down | "Pl@ntNet isn't responding right now. Try again in a few minutes." | Try again, Start over |
 | E8 | Anything unexpected | "Something went wrong. Please try again." | Try again, Start over |
 | E9 | The photo is over 10 MB *(added in step 3c)* | "That photo is too large (over 10 MB). Please choose a smaller one." | Start over |
-| E10 | A HEIC file, e.g. uploaded from the Mac; Pl@ntNet only accepts JPEG and PNG *(added in step 4a; goes away in step 6, when the browser converts photos to JPEG)* | "HEIC photos can't be identified yet. Please use a JPG or PNG." | Start over |
+| E10 | A HEIC file, e.g. uploaded from the Mac; Pl@ntNet only accepts JPEG and PNG *(added in step 4a; since step 6a the page converts photos to JPEG, so this only appears in a browser that can't read HEIC, such as Chrome on the Mac. The server keeps the check as a safety net)* | "HEIC photos can't be identified yet. Please use a JPG or PNG." | Start over |
 
 ### Partial failures (still show the result)
 
