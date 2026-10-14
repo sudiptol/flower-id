@@ -65,7 +65,13 @@ A personal learning project. It's a phone-friendly web page where I take or uplo
    - 5e. Tests with a fake Wikipedia
    - 5f. Real flowers on the phone, then commit and tag
 5.5. "Did you know?" fact: Wikipedia summaries are often too technical. **Decided 2026-10-14: no Anthropic/AI API** (no extra accounts or paid services). Tested options: common-name articles mostly redirect back to the same species article (rejected); article sections like Etymology give good facts for common flowers (chosen). Show the first two sentences of the best fun section under the summary, in one Wikipedia request.
-6. Error handling, plus shrinking photos to about 1 MB **and converting them to JPEG** in the browser before upload (this also removes E10, the HEIC refusal). Includes: the **Try again** button (E2, E3, E7, E8), time limits, and ignoring a late server reply if I've already pressed Start over.
+6. Error handling and photo shrinking, in small steps:
+   - 6a. Shrink photos in the browser (longest side about 1600 px, JPEG) before uploading: faster on mobile data, removes GPS, makes HEIC from the Mac work. If the browser can't read the photo, send the original (the server still guards with E10). Check Pl@ntNet's scores on the same photos before and after, so we know shrinking doesn't hurt accuracy.
+   - 6b. A time limit on the page (about 30 seconds), showing E3 instead of spinning forever
+   - 6c. **Try again** button for E2, E3, E7, E8, re-sending the same photo
+   - 6d. Ignore a late reply if I've already pressed Start over
+   - 6e. Go through every error case in SPEC.md section 5 and its acceptance criteria; trigger each one for real where possible
+   - 6f. A real test on mobile data (outside home Wi-Fi isn't possible until step 7, so simulate weak signal), then tag
 7. Put it online. Include an app icon (`apple-touch-icon.png`, `favicon.ico`): Safari asks for them, currently getting 404s.
 8. Review
 
