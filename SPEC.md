@@ -23,7 +23,7 @@ Format: *I can [do something] so that [reason]*. Ordered by importance.
 2. **Choose a saved photo:** I can choose a photo I've already taken, so that I can identify flowers later at home.
 3. **See the name:** I can see the flower's common name as the headline, with its scientific name in italics underneath, so that I learn what it is at a glance. When there's no common name, the scientific name is the headline. *(Changed in step 4g: the common name was easy to overlook in small grey text.)*
 4. **See how sure it is:** I can see the confidence score, labelled "Identified by Pl@ntNet (confidence X%)", so that I know how much to trust the answer and where it came from.
-5. **Read something interesting:** I can read a short Wikipedia summary under the name, with a link to the full article and a credit line, so that I learn about the flower and can read more if I want.
+5. **Read something interesting:** I can read a short Wikipedia summary under the name, plus a "Did you know?" fact when the article has one, with a link to the full article and a credit line, so that I learn about the flower and can read more if I want.
 6. **Be warned when it's unsure:** when confidence is below 50%, I can see a clear warning and the top 3 candidates, so that I'm not misled and can compare the options myself.
 7. **Understand failures:** when something goes wrong (no signal, no flower found, daily limit reached), I can see a plain-English message saying what happened and what to do, so that I'm never left staring at a blank or broken page.
 8. **Go again:** I can start a new identification with one tap, so that I can identify several flowers on one walk without reloading.
@@ -82,6 +82,10 @@ The app is **one page** that changes between five states. Sketches are phone wid
 |  The daisy is a common       |
 |  European species... (short  |
 |  Wikipedia summary)          |
+|                              |
+|  Did you know?               |   <- only when the article has a fun section
+|  "Daisy" comes from "day's   |
+|  eye": it closes at night.   |
 |                              |
 |  Reference: Wikipedia        |
 |  [Read the full article]     |
@@ -175,7 +179,9 @@ Pass/fail checks for each user story. A story is **done** only when every box ca
 - [x] A Wikipedia summary of a few sentences appears under a dividing line, separate from the Pl@ntNet part.
 - [x] "Reference: Wikipedia" and a link to the full article appear with it, and the link opens the right article.
 - [x] If Wikipedia has no article, the name still shows, with "No Wikipedia article found" instead of a summary. The app doesn't fail.
-- [ ] *(Added after step 5)* The summary is in plain, everyday language with something interesting, not botanical jargon. *(Step 5.5.)*
+- [ ] *(Step 5.5)* A "Did you know?" fact appears under the summary: the first two sentences of the article's best "fun" section, chosen in this order: Etymology (name origin), then In culture / Folklore / Symbolism, then Uses, then Cultivation / History.
+- [ ] *(Step 5.5)* When the article has none of those sections, the "Did you know?" box simply doesn't appear (no error message).
+- [ ] *(Step 5.5)* Getting the fact needs no extra waiting: the summary and the sections come from one Wikipedia request.
 
 **6. Be warned when it's unsure**
 - [x] At 49% the warning box and the top 3 candidates show. At 50% they don't (the boundary is tested exactly).

@@ -3,33 +3,49 @@
 import pytest
 import requests
 
-from wikipedia import TIMEOUT_SECONDS, fetch_summary
+from wikipedia import TIMEOUT_SECONDS, fetch_summary, find_fun_fact, split_into_sentences
 
-SUNFLOWER_PAGE = {
-    "type": "standard",
-    "title": "Common sunflower",
-    "extract": "The common sunflower is a species of large annual forb of the daisy family.",
-    "content_urls": {"mobile": {"page": "https://en.m.wikipedia.org/wiki/Common_sunflower"}},
-}
+DAISY_ARTICLE = (
+    "Bellis perennis ( BEL-iss), the daisy, is a European species of the family Asteraceae.\n"
+    "A second intro paragraph that the summary should leave out.\n\n"
+    "== Description ==\n"
+    "Leaves, stems and flower heads, described in botanical detail for anyone who wants it.\n\n"
+    "== Uses ==\n"
+    "The young leaves can be eaten raw in salads or cooked, and the flower buds can be pickled like capers.\n\n"
+    "== Etymology ==\n"
+    'Bellis may come from bellus, Latin for "pretty". The name "daisy" is a corruption of "day\'s eye". '
+    "A third sentence that should be left out.\n"
+)
+
+
+def make_page(**fields):
+    """A Wikipedia reply for one page, in the shape the real API sends."""
+    page = {
+        "title": "Bellis perennis",
+        "extract": DAISY_ARTICLE,
+        "fullurl": "https://en.wikipedia.org/wiki/Bellis_perennis",
+    }
+    page.update(fields)
+    return {"query": {"pages": [page]}}
 
 
 class FakeWikipediaResponse:
-    def __init__(self, status_code, page=None, is_json=True):
+    def __init__(self, status_code, reply=None, is_json=True):
         self.status_code = status_code
-        self.page = page
+        self.reply = reply
         self.is_json = is_json
 
     def json(self):
         if not self.is_json:
             raise ValueError("not JSON")
-        return self.page
+        return self.reply
 
 
 @pytest.fixture
 def requests_made(monkeypatch):
     """Records every request wikipedia.py makes. Set .answer to choose the fake reply."""
     class Recorder:
-        answer = FakeWikipediaResponse(200, SUNFLOWER_PAGE)
+        answer = FakeWikipediaResponse(200, make_page())
         calls = []
 
     def fake_get(address, **options):
@@ -45,58 +61,90 @@ def requests_made(monkeypatch):
 
 # --- Found ---
 
-def test_returns_summary_and_link(requests_made):
-    result = fetch_summary("Helianthus annuus")
+def test_returns_summary_link_and_fun_fact(requests_made):
+    result = fetch_summary("Bellis perennis")
     assert result == {
         "status": "found",
-        "summary": "The common sunflower is a species of large annual forb of the daisy family.",
-        # Wikipedia's own link, not one built from the name we asked for (it redirected).
-        "url": "https://en.m.wikipedia.org/wiki/Common_sunflower",
+        # Only the first paragraph, with the pronunciation's stray space tidied
+        "summary": "Bellis perennis (BEL-iss), the daisy, is a European species of the family Asteraceae.",
+        "url": "https://en.wikipedia.org/wiki/Bellis_perennis",
+        # Etymology wins over Uses, even though Uses comes first in the article; two sentences only
+        "fun_fact": 'Bellis may come from bellus, Latin for "pretty". The name "daisy" is a corruption of "day\'s eye".',
     }
 
 
-def test_asks_politely_and_with_a_time_limit(requests_made):
-    fetch_summary("Bellis perennis")
+def test_uses_wikipedias_own_link_after_a_redirect(requests_made):
+    requests_made.answer = FakeWikipediaResponse(200, make_page(
+        title="Common sunflower", fullurl="https://en.wikipedia.org/wiki/Common_sunflower"))
+    assert fetch_summary("Helianthus annuus")["url"] == "https://en.wikipedia.org/wiki/Common_sunflower"
+
+
+def test_one_polite_request_with_a_time_limit(requests_made):
+    fetch_summary("Iris × hollandica")
+    assert len(requests_made.calls) == 1  # summary and fun fact come from the same request
     request = requests_made.calls[0]
     assert "flower-id" in request["headers"]["User-Agent"]  # otherwise Wikipedia answers 403
     assert request["timeout"] == TIMEOUT_SECONDS == 5
+    assert request["params"]["titles"] == "Iris × hollandica"  # requests encodes the "×" itself
+    assert request["params"]["redirects"] == 1
 
 
-def test_name_with_spaces_and_hybrid_sign_is_encoded(requests_made):
-    fetch_summary("Iris × hollandica")
-    assert requests_made.calls[0]["address"].endswith("/page/summary/Iris_%C3%97_hollandica")
+# --- "Did you know?" facts ---
+
+def test_no_fun_section_means_no_fun_fact(requests_made):
+    plain = "Chrysanthemum × morifolium is a hybrid species.\n\n== Description ==\nBotanical detail only.\n"
+    requests_made.answer = FakeWikipediaResponse(200, make_page(extract=plain))
+    result = fetch_summary("Chrysanthemum × morifolium")
+    assert result["status"] == "found"
+    assert result["fun_fact"] is None
+
+
+def test_too_short_section_is_skipped_for_the_next_one():
+    article = (
+        "Intro.\n\n== Etymology ==\nSee below.\n\n"
+        "== Uses ==\nThe flowers are used to make a bright yellow dye for wool, and the leaves are made into tea.\n"
+    )
+    assert find_fun_fact(article).startswith("The flowers are used")
+
+
+def test_one_letter_abbreviations_dont_end_a_sentence():
+    text = "It was used by the Mexica of T. erecta fame. It is still grown today. A third one."
+    assert split_into_sentences(text) == [
+        "It was used by the Mexica of T. erecta fame.",
+        "It is still grown today.",
+        "A third one.",
+    ]
 
 
 # --- No article (W1) ---
 
 def test_missing_article(requests_made):
-    requests_made.answer = FakeWikipediaResponse(404, {"type": "Internal error"})
+    # The real API answers 200 for a missing page, with "missing": true.
+    requests_made.answer = FakeWikipediaResponse(200, make_page(missing=True, extract=""))
     assert fetch_summary("Notarealplant fakeus") == {"status": "no_article"}
 
 
 def test_disambiguation_page_counts_as_no_article(requests_made):
-    requests_made.answer = FakeWikipediaResponse(200, {
-        "type": "disambiguation",
-        "extract": "Rosa or De Rosa may refer to:",
-        "content_urls": {"mobile": {"page": "https://en.m.wikipedia.org/wiki/Rosa"}},
-    })
+    requests_made.answer = FakeWikipediaResponse(200, make_page(
+        extract="Rosa or De Rosa may refer to:", pageprops={"disambiguation": ""}))
     assert fetch_summary("Rosa") == {"status": "no_article"}
 
 
-def test_empty_summary_counts_as_no_article(requests_made):
-    requests_made.answer = FakeWikipediaResponse(200, {**SUNFLOWER_PAGE, "extract": ""})
-    assert fetch_summary("Helianthus annuus") == {"status": "no_article"}
+def test_empty_article_counts_as_no_article(requests_made):
+    requests_made.answer = FakeWikipediaResponse(200, make_page(extract=""))
+    assert fetch_summary("Bellis perennis") == {"status": "no_article"}
 
 
 # --- Couldn't load (W2) ---
 
 @pytest.mark.parametrize("problem", [
-    requests.Timeout(),                        # slower than 5 seconds
-    requests.ConnectionError(),                # no connection
-    FakeWikipediaResponse(503, {}),            # Wikipedia down
-    FakeWikipediaResponse(200, is_json=False), # garbled reply
-    FakeWikipediaResponse(200, {**SUNFLOWER_PAGE, "content_urls": {}}),  # no article link
+    requests.Timeout(),                               # slower than 5 seconds
+    requests.ConnectionError(),                       # no connection
+    FakeWikipediaResponse(503, {}),                   # Wikipedia down
+    FakeWikipediaResponse(200, is_json=False),        # garbled reply
+    FakeWikipediaResponse(200, {"unexpected": True}), # reply in an unexpected shape
+    FakeWikipediaResponse(200, make_page(fullurl=None)),  # no article link
 ])
 def test_problems_mean_unavailable(requests_made, problem):
     requests_made.answer = problem
-    assert fetch_summary("Helianthus annuus") == {"status": "unavailable"}
+    assert fetch_summary("Bellis perennis") == {"status": "unavailable"}
