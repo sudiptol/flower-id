@@ -36,6 +36,13 @@ BOUQUET_REPLY = {
 }
 
 
+MARIGOLD_WIKIPEDIA = {
+    "status": "found",
+    "summary": "Tagetes erecta, the Aztec marigold, is a species of flowering plant.",
+    "url": "https://en.wikipedia.org/wiki/Tagetes_erecta",
+}
+
+
 class FakePlantNetResponse:
     """Stands in for a real reply from Pl@ntNet, so tests use no quota and work offline."""
 
@@ -51,10 +58,12 @@ class FakePlantNetResponse:
 def client(monkeypatch):
     """A pretend browser that talks to the app without starting a real server.
 
-    Pl@ntNet is replaced by a fake that always answers with the bouquet reply.
+    Pl@ntNet is replaced by a fake that always answers with the bouquet reply,
+    and Wikipedia by a fake that always finds the marigold article.
     """
     monkeypatch.setenv("PLANTNET_API_KEY", "fake-key-for-tests")
     monkeypatch.setattr("app.identify_with_plantnet", lambda photo_bytes: FakePlantNetResponse(200, BOUQUET_REPLY))
+    monkeypatch.setattr("app.fetch_summary", lambda name: MARIGOLD_WIKIPEDIA)
     return app.test_client()
 
 
@@ -97,6 +106,36 @@ def test_returns_top_3_candidates_from_plantnet(client):
         {"scientific_name": "Veronica spuria", "common_name": "Bastard speedwell", "confidence": 0},
     ]
     assert reply["confident"] is False
+
+
+# --- The Wikipedia part (SPEC.md story 5, errors W1 and W2) ---
+
+def test_wikipedia_is_looked_up_for_the_best_guess_only(client, monkeypatch):
+    names_looked_up = []
+    monkeypatch.setattr("app.fetch_summary", lambda name: names_looked_up.append(name) or MARIGOLD_WIKIPEDIA)
+
+    reply = upload(client, JPEG_BYTES).get_json()
+
+    assert names_looked_up == ["Eustoma russellianum"]  # the bouquet's best guess
+    assert reply["wikipedia"] == MARIGOLD_WIKIPEDIA
+
+
+@pytest.mark.parametrize("wikipedia_problem", ["no_article", "unavailable"])
+def test_plantnet_result_still_shown_when_wikipedia_has_a_problem(client, monkeypatch, wikipedia_problem):
+    monkeypatch.setattr("app.fetch_summary", lambda name: {"status": wikipedia_problem})
+
+    response = upload(client, JPEG_BYTES)
+
+    assert response.status_code == 200
+    reply = response.get_json()
+    assert reply["candidates"][0]["scientific_name"] == "Eustoma russellianum"
+    assert reply["wikipedia"] == {"status": wikipedia_problem}
+
+
+def test_wikipedia_not_asked_when_plantnet_fails(client, monkeypatch):
+    make_plantnet_reply_with(monkeypatch, 404, {"message": "Species not found"})
+    monkeypatch.setattr("app.fetch_summary", lambda name: pytest.fail("Wikipedia should not be asked"))
+    upload(client, JPEG_BYTES)
 
 
 # --- Everything else is refused (SPEC.md errors E1, E9 and E10) ---

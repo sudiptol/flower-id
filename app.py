@@ -5,6 +5,7 @@ from dotenv import load_dotenv
 from flask import Flask, jsonify, render_template, request
 
 from plantnet import identify_with_plantnet, summarise
+from wikipedia import fetch_summary
 
 # Read secrets such as PLANTNET_API_KEY from the .env file (never saved in git).
 load_dotenv()
@@ -95,6 +96,13 @@ def identify():
             candidate["scientific_name"],
             candidate["common_name"] or "none from Pl@ntNet",
         )
+
+    # The Wikipedia part, for the best guess only. fetch_summary never fails:
+    # if Wikipedia has a problem, the Pl@ntNet result is still sent (W1, W2).
+    best_name = summary["candidates"][0]["scientific_name"]
+    summary["wikipedia"] = fetch_summary(best_name)
+    app.logger.info("Wikipedia for %s: %s", best_name, summary["wikipedia"]["status"])
+
     return jsonify(summary)
 
 

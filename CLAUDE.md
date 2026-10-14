@@ -102,7 +102,8 @@ Setup done: Python 3.15.0 installed from python.org, with certificates set up.
 **Step 4 complete** (git tag `step-4`).
 5a done: Wikipedia API explored (facts below).
 5b done: `wikipedia.py` with `fetch_summary(name)` returning status `found` / `no_article` / `unavailable`; 11 tests in `tests/test_wikipedia.py` (45 total). Checked against the real Wikipedia.
-Next: 5c, `/identify` adds the Wikipedia part.
+5c done: `/identify` adds `"wikipedia": {status, summary, url}` for the best guess only; Pl@ntNet result always returned. 49 tests; real end-to-end check passed.
+Next: 5d, the page shows the Wikipedia part.
 
 ## Environment notes
 
