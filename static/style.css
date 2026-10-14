@@ -16,6 +16,8 @@ main {
 }
 
 h1 {
+  margin: 8px 0 16px;
+  font-size: 28px;
   text-align: center;
   color: #2e6b30;
 }
@@ -40,14 +42,24 @@ button.button {
   font-family: inherit;
 }
 
-/* At most a quarter of the screen tall, so the names and summary stay in view.
-   object-fit: cover crops the edges neatly instead of squashing the photo. */
+/* My photos are close-ups with the flower in the middle, so show a centred square,
+   zoomed in on the middle. The frame is the visible square; the photo is enlarged
+   inside it and its edges are hidden. Also keeps the names and summary in view. */
+.photo-frame {
+  width: 60%;
+  max-width: 240px;
+  aspect-ratio: 1 / 1;
+  margin: 0 auto;
+  overflow: hidden;
+  border-radius: 12px;
+}
+
 .photo {
   display: block;
   width: 100%;
-  max-height: 25vh;
-  object-fit: cover;
-  border-radius: 12px;
+  height: 100%;
+  object-fit: cover; /* fill the square without squashing the photo */
+  transform: scale(1.5); /* zoom in on the middle */
 }
 
 .note {

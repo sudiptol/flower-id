@@ -138,7 +138,7 @@ The app is **one page** that changes between five states. Sketches are phone wid
 ### Layout rules
 
 - One column, big tap targets, readable in sunlight (dark text on light background).
-- On the result screen, the photo is at most a quarter of the screen tall, and Pl@ntNet's acknowledgement sits at the bottom, so the names and summary stay in view. *(Added in step 5f: a tall photo pushed the summary off screen.)*
+- The photo shows as a centred square (about 60% of the screen wide), zoomed in on the middle, because my photos are close-ups. Pl@ntNet's acknowledgement sits at the bottom. Both keep the names and summary in view. *(Added in step 5f: a tall photo pushed the summary off screen.)*
 - The two sources are always visually separate, divided by a line.
 - The Pl@ntNet attribution appears on every result.
 - Under every result, in small print, Pl@ntNet's requested acknowledgement, with the link: "The image-based plant species identification service used, is based on the Pl@ntNet recognition API, regularly updated and accessible through the site https://my.plantnet.org/". Text only, no Pl@ntNet logo.

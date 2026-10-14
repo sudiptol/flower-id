@@ -23,14 +23,18 @@
 
     <!-- State B: Working -->
     <section id="preview" hidden>
-      <img id="preview-image" class="photo" alt="The photo you chose">
+      <div class="photo-frame">
+        <img id="preview-image" class="photo" alt="The photo you chose">
+      </div>
       <p class="note" aria-live="polite">Identifying...</p>
       <button class="button" type="button" data-action="start-over">Start over</button>
     </section>
 
     <!-- States C (confident) and D (unsure): the result -->
     <section id="result" hidden>
-      <img id="result-image" class="photo" alt="The photo you chose">
+      <div class="photo-frame">
+        <img id="result-image" class="photo" alt="The photo you chose">
+      </div>
 
       <!-- Only shown when unsure (state D) -->
       <div id="unsure-warning" class="problem" role="alert" hidden>
