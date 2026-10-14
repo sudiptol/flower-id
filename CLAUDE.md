@@ -65,7 +65,8 @@ Setup done: Python 3.15.0 installed from python.org, with certificates set up.
 2b done: Flask 3.1.3 installed in `.venv`; exact versions pinned in `requirements.txt`.
 2c done: `app.py` shows "Hello from Flower ID"; tested by me in the Mac browser.
 2d done: the phone opens the app over home Wi-Fi (`host="0.0.0.0"`).
-Next: 2e, start screen with the two photo buttons.
+2e done: start screen with two photo buttons (`templates/index.html`, `static/style.css`); camera and library tested on the phone.
+Next: 2f, photo preview, non-image message (E1) and Start over.
 
 ## Environment notes
 

@@ -1,0 +1,25 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <!-- Makes the page fit the phone's screen instead of a zoomed-out desktop view -->
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Flower ID</title>
+  <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+</head>
+<body>
+  <main>
+    <h1>Flower ID</h1>
+
+    <!-- State A: Start -->
+    <section id="start">
+      <!-- capture="environment" asks the phone to open its back camera directly -->
+      <input class="visually-hidden" id="camera-input" type="file" accept="image/*" capture="environment">
+      <label class="button" for="camera-input">Take a photo</label>
+
+      <input class="visually-hidden" id="library-input" type="file" accept="image/*">
+      <label class="button" for="library-input">Choose a photo</label>
+    </section>
+  </main>
+</body>
+</html>

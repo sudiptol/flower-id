@@ -1,0 +1,50 @@
+/* Phone first: one column, big tap targets, dark text on a light background */
+
+body {
+  margin: 0;
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+  font-size: 18px;
+  line-height: 1.5;
+  color: #1a1a1a;
+  background: #ffffff;
+}
+
+main {
+  max-width: 480px;
+  margin: 0 auto;
+  padding: 16px;
+}
+
+h1 {
+  text-align: center;
+  color: #2e6b30;
+}
+
+.button {
+  display: block;
+  margin: 16px 0;
+  padding: 20px;
+  border-radius: 12px;
+  background: #2e6b30;
+  color: #ffffff;
+  font-size: 20px;
+  font-weight: bold;
+  text-align: center;
+  cursor: pointer;
+}
+
+/* Show a clear outline when the button is reached with the keyboard */
+input:focus-visible + .button {
+  outline: 3px solid #f2a900;
+  outline-offset: 3px;
+}
+
+/* Hides the plain file input but keeps it usable by keyboards and screen readers */
+.visually-hidden {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  overflow: hidden;
+  clip: rect(0 0 0 0);
+  white-space: nowrap;
+}
