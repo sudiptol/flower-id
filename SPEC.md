@@ -141,6 +141,51 @@ The app is **one page** that changes between five states. Sketches are phone wid
 
 - **Candidates on the unsure screen:** each candidate's name links to its Wikipedia article in a new tab. Swapping the summary in place is a later idea.
 
+## 4. Acceptance criteria
+
+Pass/fail checks for each user story. A story is **done** only when every box can be ticked. The numbers match section 2.
+
+**1. Take a photo**
+- [ ] On my phone, tapping **Take a photo** opens the camera directly.
+- [ ] After I take the photo, the app moves to the Working state (B) without any extra taps.
+
+**2. Choose a saved photo**
+- [ ] On my phone, tapping **Choose a photo** opens my photo library.
+- [ ] On my Mac, the same button opens a file picker.
+- [ ] Photos straight from my phone work, including iPhone's HEIC format.
+- [ ] If I pick something that isn't an image (like a PDF), I see a clear message and nothing is sent to Pl@ntNet.
+
+**3. See the name**
+- [ ] The top result's scientific name is the largest text on the result screen.
+- [ ] If Pl@ntNet gives a common name, it appears underneath in smaller text. If not, that line is simply missing (no blank gap or "None").
+
+**4. See how sure it is**
+- [ ] Confidence shows as a whole-number percentage, for example "92%", not "0.9213".
+- [ ] The exact text "Identified by Pl@ntNet (confidence X%)" appears on every result.
+
+**5. Read something interesting**
+- [ ] A Wikipedia summary of a few sentences appears under a dividing line, separate from the Pl@ntNet part.
+- [ ] "Reference: Wikipedia" and a link to the full article appear with it, and the link opens the right article.
+- [ ] If Wikipedia has no article, the name still shows, with "No Wikipedia article found" instead of a summary. The app doesn't fail.
+
+**6. Be warned when it's unsure**
+- [ ] At 49% the warning box and the top 3 candidates show. At 50% they don't (the boundary is tested exactly).
+- [ ] If Pl@ntNet returns fewer than 3 candidates, the app shows the ones it has.
+- [ ] Each candidate's name links to its Wikipedia article in a new tab.
+
+**7. Understand failures**
+- [ ] Each problem (no connection, no flower found, daily limit reached, Pl@ntNet or Wikipedia down) shows its own plain-English message saying what happened and what to do.
+- [ ] No error ever shows technical text such as a code dump or "500 Internal Server Error".
+- [ ] My API key never appears on the page, in the page source, or in any error message.
+
+**8. Go again**
+- [ ] **Identify another flower** returns to the Start state (A) in one tap, without reloading the page.
+
+**Overall**
+- [ ] On home Wi-Fi, a result appears within 10 seconds of choosing a photo.
+- [ ] Everything fits the phone screen width with no sideways scrolling.
+- [ ] *(Added in step 6)* Photos are shrunk in the browser to about 1 MB before uploading, so results come quickly on weak mobile signal.
+
 ## How I open the app
 
 This is a **web app**, not a native iPhone app: no Xcode, no App Store. I open it in my phone's web browser.

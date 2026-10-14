@@ -39,7 +39,7 @@ A personal learning project. It's a phone-friendly web page where I take or uplo
 3. Backend receives the image
 4. Pl@ntNet call
 5. Wikipedia lookup and two-source display
-6. Error handling
+6. Error handling, plus shrinking photos to about 1 MB in the browser before upload
 7. Put it online
 8. Review
 
@@ -49,7 +49,8 @@ Setup done: Python 3.15.0 installed from python.org, with certificates set up.
 1a done: git started (branch `main`), `.gitignore` created.
 1b done: problem statement approved, in `SPEC.md` section 1.
 1c done: user stories approved, in `SPEC.md` section 2 (show common name too; one photo per identification).
-1d done: screen sketch approved, in `SPEC.md` section 3, plus "How I open the app". Next: 1e, acceptance criteria.
+1d done: screen sketch approved, in `SPEC.md` section 3, plus "How I open the app".
+1e done: acceptance criteria approved, in `SPEC.md` section 4 (photo shrinking deferred to step 6). Next: 1f, error cases.
 
 ## Environment notes
 
