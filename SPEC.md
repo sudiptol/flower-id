@@ -164,7 +164,7 @@ Pass/fail checks for each user story. A story is **done** only when every box ca
 - [ ] If Pl@ntNet gives a common name, it appears underneath in smaller text. If not, that line is simply missing (no blank gap or "None").
 
 **4. See how sure it is**
-- [ ] Confidence shows as a whole-number percentage, for example "92%", not "0.9213".
+- [ ] Confidence shows as a whole-number percentage, for example "92%", not "0.9213". It's always rounded **down**, so 49.97% shows as "49%" and gets the warning. *(Decided in step 4d.)*
 - [ ] The exact text "Identified by Pl@ntNet (confidence X%)" appears on every result.
 
 **5. Read something interesting**

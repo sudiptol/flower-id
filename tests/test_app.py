@@ -11,10 +11,39 @@ JPEG_BYTES = b"\xff\xd8\xff\xe0" + b"\x00" * 100
 PNG_BYTES = b"\x89PNG\r\n\x1a\n" + b"\x00" * 100
 HEIC_BYTES = b"\x00\x00\x00\x20ftypheic" + b"\x00" * 100
 
+# A shortened copy of a real Pl@ntNet reply (the mixed bouquet from step 4c).
+BOUQUET_REPLY = {
+    "results": [
+        {"score": 0.02573, "species": {"scientificNameWithoutAuthor": "Eustoma russellianum",
+                                       "commonNames": ["Lisianthus", "Bluebell"]}},
+        {"score": 0.01621, "species": {"scientificNameWithoutAuthor": "Iris × hollandica",
+                                       "commonNames": ["Dutch Iris"]}},
+        {"score": 0.00846, "species": {"scientificNameWithoutAuthor": "Veronica spuria",
+                                       "commonNames": ["Bastard speedwell"]}},
+    ],
+    "remainingIdentificationRequests": 498,
+}
+
+
+class FakePlantNetResponse:
+    """Stands in for a real reply from Pl@ntNet, so tests use no quota and work offline."""
+
+    def __init__(self, status_code, reply):
+        self.status_code = status_code
+        self.reply = reply
+
+    def json(self):
+        return self.reply
+
 
 @pytest.fixture
-def client():
-    """A pretend browser that talks to the app without starting a real server."""
+def client(monkeypatch):
+    """A pretend browser that talks to the app without starting a real server.
+
+    Pl@ntNet is replaced by a fake that always answers with the bouquet reply.
+    """
+    monkeypatch.setenv("PLANTNET_API_KEY", "fake-key-for-tests")
+    monkeypatch.setattr("app.identify_with_plantnet", lambda photo_bytes: FakePlantNetResponse(200, BOUQUET_REPLY))
     return app.test_client()
 
 
@@ -31,12 +60,11 @@ def test_home_page_loads(client):
     assert "Take a photo" in response.get_data(as_text=True)
 
 
-# --- Real images are accepted ---
+# --- Real images are accepted and identified ---
 
 def test_accepts_jpeg(client):
     response = upload(client, JPEG_BYTES, "flower.jpg")
     assert response.status_code == 200
-    assert response.get_json()["size_bytes"] == len(JPEG_BYTES)
 
 
 def test_accepts_png(client):
@@ -48,6 +76,16 @@ def test_accepts_photo_just_under_the_limit(client):
     almost_too_big = JPEG_BYTES + b"\x00" * (MAX_PHOTO_BYTES - 100_000)
     response = upload(client, almost_too_big)
     assert response.status_code == 200
+
+
+def test_returns_top_3_candidates_from_plantnet(client):
+    reply = upload(client, JPEG_BYTES).get_json()
+    assert reply["candidates"] == [
+        {"scientific_name": "Eustoma russellianum", "common_name": "Lisianthus", "confidence": 2},
+        {"scientific_name": "Iris × hollandica", "common_name": "Dutch Iris", "confidence": 1},
+        {"scientific_name": "Veronica spuria", "common_name": "Bastard speedwell", "confidence": 0},
+    ]
+    assert reply["confident"] is False
 
 
 # --- Everything else is refused (SPEC.md errors E1, E9 and E10) ---

@@ -33,15 +33,6 @@ function isImage(file) {
   return file.type.startsWith("image/") || name.endsWith(".heic") || name.endsWith(".heif");
 }
 
-// 9282587 bytes -> "8.9 MB", 31599 bytes -> "31 KB"
-function formatSize(bytes) {
-  const megabytes = bytes / (1024 * 1024);
-  if (megabytes >= 1) {
-    return megabytes.toFixed(1) + " MB";
-  }
-  return Math.round(bytes / 1024) + " KB";
-}
-
 // Send the photo to the server and show its reply.
 async function sendPhoto(file) {
   const formData = new FormData();
@@ -72,10 +63,10 @@ async function sendPhoto(file) {
     return;
   }
 
-  // For now the server just reports what it received. Pl@ntNet comes in step 4.
+  // Temporary one-line result. Step 4e replaces this with the full result screen.
   const result = await response.json();
-  statusNote.textContent =
-    "Server received: " + result.filename + " (" + result.content_type + ", " + formatSize(result.size_bytes) + ")";
+  const best = result.candidates[0];
+  statusNote.textContent = "Best guess: " + best.scientific_name + " (" + best.confidence + "%)";
 }
 
 function handlePhoto(event) {
