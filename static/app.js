@@ -8,6 +8,11 @@ const MAX_PHOTO_BYTES = 10 * 1024 * 1024;
 const MAX_PHOTO_PIXELS = 1600;
 const JPEG_QUALITY = 0.85;
 
+// How long the page waits for an answer before giving up (E3).
+// Longer than the server's own worst case (upload ~5 s + Pl@ntNet 20 s + Wikipedia 5 s),
+// so the page never gives up on an answer that was about to arrive.
+const PAGE_TIMEOUT_MS = 35 * 1000;
+
 const startSection = document.getElementById("start");
 const previewSection = document.getElementById("preview");
 const resultSection = document.getElementById("result");
@@ -167,10 +172,18 @@ async function sendPhoto(photo) {
 
   let response;
   try {
-    response = await fetch("/identify", { method: "POST", body: formData });
+    response = await fetch("/identify", {
+      method: "POST",
+      body: formData,
+      signal: AbortSignal.timeout(PAGE_TIMEOUT_MS), // cancels the request if it takes too long
+    });
   } catch (error) {
-    // fetch only fails like this when the server can't be reached at all.
-    showProblem("Couldn't connect. Check your signal and try again."); // E2
+    if (error.name === "TimeoutError") {
+      showProblem("Identification is taking too long. Please try again."); // E3
+    } else {
+      // Otherwise fetch only fails like this when the server can't be reached at all.
+      showProblem("Couldn't connect. Check your signal and try again."); // E2
+    }
     return;
   }
 
@@ -190,7 +203,19 @@ async function sendPhoto(photo) {
     return;
   }
 
-  showResult(await response.json());
+  let result;
+  try {
+    result = await response.json();
+  } catch (error) {
+    // The deadline can also run out while the reply is still downloading.
+    if (error.name === "TimeoutError") {
+      showProblem("Identification is taking too long. Please try again."); // E3
+    } else {
+      showProblem("Something went wrong. Please try again."); // E8
+    }
+    return;
+  }
+  showResult(result);
 }
 
 async function handlePhoto(event) {
