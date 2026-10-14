@@ -35,7 +35,14 @@ A personal learning project. It's a phone-friendly web page where I take or uplo
    - 1f. Error cases
    - 1g. Out of scope: what we're not building
    - 1h. Review, answer open questions, sign off, commit
-2. Photo-picker page (no API calls)
+2. Photo-picker page (no API calls), in small steps:
+   - 2a. Create a virtual environment (`.venv`)
+   - 2b. Install Flask into it (ask first) and record it in `requirements.txt`
+   - 2c. Smallest possible Flask app: "Hello" on the Mac
+   - 2d. Open it from the phone over home Wi-Fi
+   - 2e. Start screen (state A): the two photo buttons
+   - 2f. Photo preview after picking, plus the non-image message (E1) and Start over
+   - 2g. Check against acceptance criteria 1 and 2 on phone and Mac, then commit
 3. Backend receives the image
 4. Pl@ntNet call
 5. Wikipedia lookup and two-source display
@@ -52,7 +59,9 @@ Setup done: Python 3.15.0 installed from python.org, with certificates set up.
 1d done: screen sketch approved, in `SPEC.md` section 3, plus "How I open the app".
 1e done: acceptance criteria approved, in `SPEC.md` section 4 (photo shrinking deferred to step 6).
 1f done: error cases approved, in `SPEC.md` section 5.
-1g done: out of scope approved, in `SPEC.md` section 6. Next: 1h, final review and sign-off.
+1g done: out of scope approved, in `SPEC.md` section 6.
+**Step 1 complete:** spec signed off (git tag `spec-v1`). `SPEC.md` is the source of truth; check work against it.
+Next: 2a, create the virtual environment.
 
 ## Environment notes
 
@@ -61,7 +70,6 @@ Setup done: Python 3.15.0 installed from python.org, with certificates set up.
 
 ## Still to do in later steps
 
-- Create a virtual environment (`.venv`) and install Flask inside it. Ask first. Probably step 2.
-- Create a Pl@ntNet account and API key before step 4. The key goes in `.env`.
+- Create a Pl@ntNet account and API key before step 4. The key goes in `.env`. Read their terms for attribution wording and photo handling.
 - Create `.env` at step 4 (`.gitignore` already blocks it).
 - Commit after each finished small step, with a clear message.

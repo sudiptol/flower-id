@@ -108,6 +108,7 @@ The app is **one page** that changes between five states. Sketches are phone wid
 |  Rosa arvensis           12% |
 |                              |
 |  Identified by Pl@ntNet      |
+|  (confidence 38%)            |
 |  ----------------------------|
 |  (Wikipedia summary of the   |
 |   best guess, with credit)   |
@@ -148,6 +149,7 @@ Pass/fail checks for each user story. A story is **done** only when every box ca
 **1. Take a photo**
 - [ ] On my phone, tapping **Take a photo** opens the camera directly.
 - [ ] After I take the photo, the app moves to the Working state (B) without any extra taps.
+- [ ] On my Mac (no camera prompt), **Take a photo** simply opens the file picker, like **Choose a photo**.
 
 **2. Choose a saved photo**
 - [ ] On my phone, tapping **Choose a photo** opens my photo library.
@@ -185,6 +187,10 @@ Pass/fail checks for each user story. A story is **done** only when every box ca
 - [ ] On home Wi-Fi, a result appears within 10 seconds of choosing a photo.
 - [ ] Everything fits the phone screen width with no sideways scrolling.
 - [ ] *(Added in step 6)* Photos are shrunk in the browser to about 1 MB before uploading, so results come quickly on weak mobile signal.
+- [ ] *(Added in step 6)* The hidden location data (GPS) that phones store inside photos is removed before uploading. Shrinking the photo in the browser does this automatically; we check it.
+
+**Before step 4**
+- [ ] Pl@ntNet's terms are read, and the attribution wording matches what they require.
 
 ## 5. Error cases
 
@@ -238,11 +244,11 @@ What this version deliberately does **not** do. If a new idea comes up while bui
 
 - **User accounts or sign-up.** It's just me. (A simple lock to protect my daily limit *is* in scope, at step 7.)
 - **Working offline.** Identification needs Pl@ntNet, so there's no signal, no result. The app only has to fail clearly (error E2).
-- **Saving my photos.** Each photo is sent to Pl@ntNet and then thrown away. Nothing is stored on the server.
+- **Saving my photos.** My app passes each photo to Pl@ntNet and keeps no copy. What Pl@ntNet does with uploaded photos is set by its terms, which get checked in step 4.
 - **Polished visual design**, such as custom fonts, animations or dark mode. Clean and readable is enough.
 - **English only:** English Wikipedia and English common names.
 
-## How I open the app
+## 7. How I open the app
 
 This is a **web app**, not a native iPhone app: no Xcode, no App Store. I open it in my phone's web browser.
 
