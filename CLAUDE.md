@@ -101,12 +101,14 @@ Setup done: Python 3.15.0 installed from python.org, with certificates set up.
 4g done: real flowers on the phone. Feedback led to the common name becoming the headline. A marigold close-up scored only 14–16% (correct answer was 2nd), so accuracy work is parked for phase 2.
 **Step 4 complete** (git tag `step-4`).
 5a done: Wikipedia API explored (facts below).
-Next: 5b, `wikipedia.py`.
+5b done: `wikipedia.py` with `fetch_summary(name)` returning status `found` / `no_article` / `unavailable`; 11 tests in `tests/test_wikipedia.py` (45 total). Checked against the real Wikipedia.
+Next: 5c, `/identify` adds the Wikipedia part.
 
 ## Environment notes
 
 - Use `python3` (3.15.0, at `/Library/Frameworks/Python.framework/Versions/3.15/`). An old Python 3.9 is also on the Mac; ignore it.
 - Two package lists: `requirements.txt` holds what the app needs to run (also used online), and `requirements-dev.txt` adds tools only needed on the Mac, like pytest. After adding a package, put it in the right file with its exact version, and commit. Rebuild everything with `pip install -r requirements-dev.txt`.
+- When breaking code on purpose to prove a test works, commit the file first so `git checkout` can restore it (or undo by hand and search for leftovers).
 - **Run the tests before every commit:** `python -m pytest` (with `.venv` active). Add tests for each new behaviour, including failures.
 - Project packages live in `.venv`. Turn it on with `source .venv/bin/activate` (prompt shows `(.venv)`), off with `deactivate`.
 - Find the Mac's Wi-Fi address with `ipconfig getifaddr en0` (it was 192.168.86.23 on 2026-10-14; it can change). The phone opens `http://<that address>:5001`.
