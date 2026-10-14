@@ -1,5 +1,8 @@
 // Runs in the browser. Switches the page between its states (see SPEC.md section 3).
 
+// Largest photo the server accepts (10 MB). The same limit is in app.py.
+const MAX_PHOTO_BYTES = 10 * 1024 * 1024;
+
 const startSection = document.getElementById("start");
 const previewSection = document.getElementById("preview");
 const problemSection = document.getElementById("problem");
@@ -54,7 +57,18 @@ async function sendPhoto(file) {
   }
 
   if (!response.ok) {
-    showProblem("Something went wrong. Please try again."); // E8
+    // Our server explains known problems (like E1 or E9) in an "error" field.
+    // Anything else, such as a crash, gets the general message E8.
+    let message = "Something went wrong. Please try again.";
+    try {
+      const reply = await response.json();
+      if (reply.error) {
+        message = reply.error;
+      }
+    } catch (error) {
+      // The reply wasn't JSON, so keep the general message.
+    }
+    showProblem(message);
     return;
   }
 
@@ -72,6 +86,12 @@ function handlePhoto(event) {
 
   if (!isImage(file)) {
     showProblem("That file isn't a photo. Please choose a JPG, PNG or HEIC image."); // E1
+    return;
+  }
+
+  // Checked here too, so a huge photo isn't uploaded only to be refused.
+  if (file.size > MAX_PHOTO_BYTES) {
+    showProblem("That photo is too large (over 10 MB). Please choose a smaller one."); // E9
     return;
   }
 

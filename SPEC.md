@@ -156,6 +156,7 @@ Pass/fail checks for each user story. A story is **done** only when every box ca
 - [x] On my Mac, the same button opens a file picker.
 - [x] Photos straight from my phone work, including iPhone's HEIC format. *(Tested in step 3b: iPhone Safari converts photos to JPEG, about 2 MB, before sending. A HEIC file uploaded from the Mac still arrives as HEIC; step 4 checks whether Pl@ntNet accepts it.)*
 - [x] If I pick something that isn't an image (like a PDF), I see a clear message and nothing is sent to Pl@ntNet.
+- [x] *(Added in step 3c)* The server checks every upload itself: it refuses non-images (by their first bytes, not their label) and anything over 10 MB.
 
 **3. See the name**
 - [ ] The top result's scientific name is the largest text on the result screen.
@@ -208,6 +209,7 @@ Every way the app can fail, and exactly what I see. The exact error codes Pl@ntN
 | E6 | Pl@ntNet rejects the API key (missing, wrong or expired) | "Setup problem: the Pl@ntNet key isn't working. Check the .env file." | Start over |
 | E7 | Pl@ntNet is down | "Pl@ntNet isn't responding right now. Try again in a few minutes." | Try again, Start over |
 | E8 | Anything unexpected | "Something went wrong. Please try again." | Try again, Start over |
+| E9 | The photo is over 10 MB *(added in step 3c)* | "That photo is too large (over 10 MB). Please choose a smaller one." | Start over |
 
 ### Partial failures (still show the result)
 

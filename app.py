@@ -1,6 +1,25 @@
 from flask import Flask, jsonify, render_template, request
 
+# Largest photo the server accepts (10 MB). The same limit is in static/app.js.
+MAX_PHOTO_BYTES = 10 * 1024 * 1024
+
+# HEIC files say "ftyp" at byte 4, followed by one of these "brand" names.
+HEIC_BRANDS = [b"heic", b"heix", b"mif1"]
+
 app = Flask(__name__)
+# Flask refuses anything bigger before our code even runs (error 413, handled below).
+app.config["MAX_CONTENT_LENGTH"] = MAX_PHOTO_BYTES
+
+
+def is_image(data):
+    """Check the file's first bytes, because the label the sender gives can be wrong."""
+    if data.startswith(b"\xff\xd8\xff"):
+        return True  # JPEG
+    if data.startswith(b"\x89PNG\r\n\x1a\n"):
+        return True  # PNG
+    if data[4:8] == b"ftyp" and data[8:12] in HEIC_BRANDS:
+        return True  # HEIC
+    return False
 
 
 @app.route("/")
@@ -17,12 +36,22 @@ def identify():
 
     photo_bytes = photo.read()
 
+    if not is_image(photo_bytes):
+        # Error E1 from SPEC.md section 5.
+        return jsonify(error="That file isn't a photo. Please choose a JPG, PNG or HEIC image."), 400
+
     # For now, just report what arrived. Pl@ntNet comes in step 4.
     return jsonify(
         filename=photo.filename,
         content_type=photo.content_type,
         size_bytes=len(photo_bytes),
     )
+
+
+@app.errorhandler(413)
+def photo_too_large(error):
+    # Error E9 from SPEC.md section 5.
+    return jsonify(error="That photo is too large (over 10 MB). Please choose a smaller one."), 413
 
 
 if __name__ == "__main__":

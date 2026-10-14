@@ -75,7 +75,8 @@ Setup done: Python 3.15.0 installed from python.org, with certificates set up.
 **Step 2 complete** (git tag `step-2`): acceptance boxes ticked in `SPEC.md`. Still open: "Take a photo" on the Mac, and the full HEIC check in step 3.
 3a done: `POST /identify` receives a photo and replies with JSON (filename, type, size); tested with curl.
 3b done: the page uploads the photo with `fetch` and shows the server's reply; E2 and E8 messages wired up. Phone test: iPhone Safari sends **JPEG, about 2 MB** (it converts HEIC itself).
-Next: 3c, server-side file checks.
+3c done: server checks first bytes (JPEG, PNG, HEIC) and a 10 MB limit; new error E9 in the spec. The page also checks size before uploading. `MAX_PHOTO_BYTES` lives in both `app.py` and `static/app.js`: change both together.
+Next: 3d, first automated tests with pytest (ask before installing).
 
 ## Environment notes
 
