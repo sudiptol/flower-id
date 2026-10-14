@@ -61,6 +61,11 @@ function showWikipedia(wikipedia) {
   reference.hidden = !found;
   problem.hidden = found;
 
+  // "Did you know?" only when Wikipedia found a fun fact; otherwise the box stays hidden.
+  const funFact = document.getElementById("fun-fact");
+  funFact.hidden = !(found && wikipedia.fun_fact);
+  document.getElementById("fun-fact-text").textContent = funFact.hidden ? "" : wikipedia.fun_fact;
+
   if (found) {
     summary.textContent = wikipedia.summary;
     document.getElementById("wikipedia-link").href = wikipedia.url;

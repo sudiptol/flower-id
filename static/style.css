@@ -131,6 +131,18 @@ button.button {
   font-weight: normal;
 }
 
+/* "Did you know?" box: a soft green panel so the fun fact stands out from the summary */
+.fun-fact {
+  padding: 4px 16px;
+  border-radius: 12px;
+  background: #eef6ee;
+}
+
+.fun-fact .label {
+  margin-top: 8px;
+  color: #2e6b30;
+}
+
 .wikipedia .note {
   text-align: left;
 }

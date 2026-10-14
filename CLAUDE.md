@@ -108,7 +108,7 @@ Setup done: Python 3.15.0 installed from python.org, with certificates set up.
 5e: covered by the fake-Wikipedia tests written in 5b and 5c.
 5f done: real flowers on the phone. Layout fixes: photo is a zoomed-in centred square, acknowledgement at the bottom, smaller title. Feedback: Wikipedia summaries are too technical, so step 5.5 adds an AI plain-language rewrite.
 **Step 5 complete** (git tag `step-5`).
-Next: choose a non-AI approach for plain-language summaries (step 5.5), or park it.
+5.5 built: "Did you know?" box (server in `wikipedia.py`, page in `app.js`). 53 tests. Waiting for the phone check, then tag `step-5.5`.
 
 ## Environment notes
 
@@ -136,9 +136,10 @@ Next: choose a non-AI approach for plain-language summaries (step 5.5), or park 
 
 ## Wikipedia API facts (tested in 5a on 2026-10-14)
 
-- `GET https://en.wikipedia.org/api/rest_v1/page/summary/<Name_with_underscores>` (URL-encode it; "×" works). No key. Must send a descriptive `User-Agent`.
-- Reply fields to use: `type`, `title`, `extract` (the summary), `content_urls.mobile.page` (the article link).
-- No article gives **404**. A name with several meanings gives 200 with `"type": "disambiguation"` and a useless extract ("Rosa or De Rosa may refer to:"): treat it like no article (W1).
+- **Since step 5.5 the app uses one request:** `GET https://en.wikipedia.org/w/api.php` with `action=query, titles=<name>, redirects=1, prop=extracts|info|pageprops, explaintext=1, inprop=url, ppprop=disambiguation, format=json, formatversion=2`. No key. Must send a descriptive `User-Agent`.
+- Reply: `query.pages[0]` has `extract` (whole article as plain text, headings like `== Etymology ==`), `fullurl` (the article link), `pageprops.disambiguation` (present on "may refer to" pages), `missing: true` (no article, but still status **200**).
+- (Step 5a used the simpler `rest_v1/page/summary/<name>` endpoint: it gives only the opening paragraph and answers 404 for a missing page.)
+- A name with several meanings ("Rosa or De Rosa may refer to:") is treated like no article (W1).
 - Redirects happen silently: "Helianthus annuus" returns the "Common sunflower" article. So take the link from `content_urls`, never build it from the name.
 - Summary length: about 120–750 characters (1–5 sentences) in tests. Fine to show in full.
 
