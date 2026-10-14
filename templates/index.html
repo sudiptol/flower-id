@@ -21,10 +21,10 @@
       <label class="button" for="library-input">Choose a photo</label>
     </section>
 
-    <!-- State B: Working. For now it only shows the photo; identifying comes in step 4. -->
+    <!-- State B: Working. For now it shows what the server received; identifying comes in step 4. -->
     <section id="preview" hidden>
       <img id="preview-image" class="photo" alt="The photo you chose">
-      <p class="note">Photo ready. Identifying it comes in a later step.</p>
+      <p id="status-note" class="note" aria-live="polite"></p>
       <button class="button" type="button" data-action="start-over">Start over</button>
     </section>
 

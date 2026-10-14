@@ -154,7 +154,7 @@ Pass/fail checks for each user story. A story is **done** only when every box ca
 **2. Choose a saved photo**
 - [x] On my phone, tapping **Choose a photo** opens my photo library.
 - [x] On my Mac, the same button opens a file picker.
-- [ ] Photos straight from my phone work, including iPhone's HEIC format. *(Preview works; the full test is when the photo reaches the server in step 3.)*
+- [x] Photos straight from my phone work, including iPhone's HEIC format. *(Tested in step 3b: iPhone Safari converts photos to JPEG, about 2 MB, before sending. A HEIC file uploaded from the Mac still arrives as HEIC; step 4 checks whether Pl@ntNet accepts it.)*
 - [x] If I pick something that isn't an image (like a PDF), I see a clear message and nothing is sent to Pl@ntNet.
 
 **3. See the name**

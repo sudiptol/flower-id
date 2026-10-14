@@ -7,6 +7,7 @@ const problemSection = document.getElementById("problem");
 const cameraInput = document.getElementById("camera-input");
 const libraryInput = document.getElementById("library-input");
 const previewImage = document.getElementById("preview-image");
+const statusNote = document.getElementById("status-note");
 const problemMessage = document.getElementById("problem-message");
 
 // Show one state and hide the others.
@@ -17,10 +18,50 @@ function showState(section) {
   section.hidden = false;
 }
 
+// Show the Problem state (E) with one of the messages from SPEC.md section 5.
+function showProblem(message) {
+  problemMessage.textContent = message;
+  showState(problemSection);
+}
+
 // Some browsers don't report a type for iPhone HEIC photos, so also check the file name.
 function isImage(file) {
   const name = file.name.toLowerCase();
   return file.type.startsWith("image/") || name.endsWith(".heic") || name.endsWith(".heif");
+}
+
+// 9282587 bytes -> "8.9 MB", 31599 bytes -> "31 KB"
+function formatSize(bytes) {
+  const megabytes = bytes / (1024 * 1024);
+  if (megabytes >= 1) {
+    return megabytes.toFixed(1) + " MB";
+  }
+  return Math.round(bytes / 1024) + " KB";
+}
+
+// Send the photo to the server and show its reply.
+async function sendPhoto(file) {
+  const formData = new FormData();
+  formData.append("photo", file);
+
+  let response;
+  try {
+    response = await fetch("/identify", { method: "POST", body: formData });
+  } catch (error) {
+    // fetch only fails like this when the server can't be reached at all.
+    showProblem("Couldn't connect. Check your signal and try again."); // E2
+    return;
+  }
+
+  if (!response.ok) {
+    showProblem("Something went wrong. Please try again."); // E8
+    return;
+  }
+
+  // For now the server just reports what it received. Pl@ntNet comes in step 4.
+  const result = await response.json();
+  statusNote.textContent =
+    "Server received: " + result.filename + " (" + result.content_type + ", " + formatSize(result.size_bytes) + ")";
 }
 
 function handlePhoto(event) {
@@ -30,15 +71,16 @@ function handlePhoto(event) {
   }
 
   if (!isImage(file)) {
-    // Error E1 from SPEC.md section 5.
-    problemMessage.textContent = "That file isn't a photo. Please choose a JPG, PNG or HEIC image.";
-    showState(problemSection);
+    showProblem("That file isn't a photo. Please choose a JPG, PNG or HEIC image."); // E1
     return;
   }
 
-  // Show the photo straight from the device. Nothing is uploaded yet.
+  // Show the photo straight from the device while it uploads.
   previewImage.src = URL.createObjectURL(file);
+  statusNote.textContent = "Identifying...";
   showState(previewSection);
+
+  sendPhoto(file);
 }
 
 function startOver() {
