@@ -21,7 +21,7 @@ Format: *I can [do something] so that [reason]*. Ordered by importance.
 
 1. **Take a photo:** I can take a photo of a flower with my phone camera, right in the app, so that I can identify it on the spot during a walk.
 2. **Choose a saved photo:** I can choose a photo I've already taken, so that I can identify flowers later at home.
-3. **See the name:** I can see the flower's scientific name as the headline, with its common name (when there is one) in smaller text underneath, so that I learn what it is at a glance.
+3. **See the name:** I can see the flower's common name as the headline, with its scientific name in italics underneath, so that I learn what it is at a glance. When there's no common name, the scientific name is the headline. *(Changed in step 4g: the common name was easy to overlook in small grey text.)*
 4. **See how sure it is:** I can see the confidence score, labelled "Identified by Pl@ntNet (confidence X%)", so that I know how much to trust the answer and where it came from.
 5. **Read something interesting:** I can read a short Wikipedia summary under the name, with a link to the full article and a credit line, so that I learn about the flower and can read more if I want.
 6. **Be warned when it's unsure:** when confidence is below 50%, I can see a clear warning and the top 3 candidates, so that I'm not misled and can compare the options myself.
@@ -30,7 +30,7 @@ Format: *I can [do something] so that [reason]*. Ordered by importance.
 
 ### Decisions
 
-- **Common name:** yes. Show it in smaller text under the scientific name when Pl@ntNet provides one.
+- **Common name:** yes, as the headline when Pl@ntNet provides one, with the scientific name underneath. *(Swapped in step 4g.)*
 - **Photos per identification:** one. Sending several photos of the same plant is a later idea (see Out of scope).
 
 ## 3. Screen sketch
@@ -73,8 +73,8 @@ The app is **one page** that changes between five states. Sketches are phone wid
 |  |   (photo preview)      |  |
 |  +------------------------+  |
 |                              |
-|  Bellis perennis             |   <- headline
-|  Common daisy                |   <- smaller
+|  Common daisy                |   <- headline
+|  Bellis perennis             |   <- smaller, italics
 |                              |
 |  Identified by Pl@ntNet      |
 |  (confidence 92%)            |
@@ -101,11 +101,14 @@ The app is **one page** that changes between five states. Sketches are phone wid
 |  ! Compare the options below.|
 |                              |
 |  Best guess:                 |
-|  Rosa canina   Dog rose  38% |
+|  Dog rose                    |
+|  Rosa canina                 |
 |                              |
 |  Other candidates:           |
-|  Rosa rubiginosa         21% |
-|  Rosa arvensis           12% |
+|  Sweet briar (Rosa           |
+|    rubiginosa): 21%          |
+|  Field rose (Rosa            |
+|    arvensis): 12%            |
 |                              |
 |  Identified by Pl@ntNet      |
 |  (confidence 38%)            |
@@ -160,8 +163,8 @@ Pass/fail checks for each user story. A story is **done** only when every box ca
 - [x] *(Added in step 3c)* The server checks every upload itself: it refuses non-images (by their first bytes, not their label) and anything over 10 MB.
 
 **3. See the name**
-- [ ] The top result's scientific name is the largest text on the result screen.
-- [ ] If Pl@ntNet gives a common name, it appears underneath in smaller text. If not, that line is simply missing (no blank gap or "None").
+- [ ] The top result's common name is the largest text on the result screen, with the scientific name in italics underneath.
+- [ ] If Pl@ntNet gives no common name, the scientific name becomes the headline, and there's no blank gap or "None".
 
 **4. See how sure it is**
 - [ ] Confidence shows as a whole-number percentage, for example "92%", not "0.9213". It's always rounded **down**, so 49.97% shows as "49%" and gets the warning. *(Decided in step 4d.)*

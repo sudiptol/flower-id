@@ -53,11 +53,21 @@ function wikipediaLink(scientificName) {
 function showResult(result) {
   const best = result.candidates[0];
 
-  document.getElementById("scientific-name").textContent = best.scientific_name;
-
-  const commonName = document.getElementById("common-name");
-  commonName.textContent = best.common_name || "";
-  commonName.hidden = !best.common_name; // no blank line when there's no common name
+  // Common name as the headline, scientific name underneath.
+  // Without a common name, the scientific name becomes the headline instead.
+  const mainName = document.getElementById("main-name");
+  const secondName = document.getElementById("second-name");
+  if (best.common_name) {
+    mainName.textContent = best.common_name;
+    mainName.classList.remove("scientific");
+    secondName.textContent = best.scientific_name;
+    secondName.hidden = false;
+  } else {
+    mainName.textContent = best.scientific_name;
+    mainName.classList.add("scientific");
+    secondName.textContent = "";
+    secondName.hidden = true; // no blank line
+  }
 
   document.getElementById("confidence").textContent = formatConfidence(best.confidence);
 
@@ -76,10 +86,12 @@ function showResult(result) {
     link.rel = "noopener";
     link.textContent = candidate.scientific_name;
 
+    // "African marigold (Tagetes erecta): 7%", or "Tagetes erecta: 7%" without a common name
     const item = document.createElement("li");
-    item.append(link);
     if (candidate.common_name) {
-      item.append(" (" + candidate.common_name + ")");
+      item.append(candidate.common_name + " (", link, ")");
+    } else {
+      item.append(link);
     }
     item.append(": " + formatConfidence(candidate.confidence));
     list.append(item);

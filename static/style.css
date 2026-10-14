@@ -51,18 +51,22 @@ button.button {
   color: #555555;
 }
 
-/* Result screen. Scientific names are written in italics, as botanists do. */
-.scientific-name {
+/* Result screen */
+.main-name {
   margin: 16px 0 0;
   font-size: 28px;
-  font-style: italic;
   line-height: 1.2;
 }
 
-.common-name {
+.second-name {
   margin: 4px 0 0;
   font-size: 20px;
-  color: #555555;
+  color: #444444;
+}
+
+/* Scientific names are written in italics, as botanists do. */
+.scientific {
+  font-style: italic;
 }
 
 .source {
