@@ -172,9 +172,10 @@ Pass/fail checks for each user story. A story is **done** only when every box ca
 - [x] The exact text "Identified by Pl@ntNet (confidence X%)" appears on every result.
 
 **5. Read something interesting**
-- [ ] A Wikipedia summary of a few sentences appears under a dividing line, separate from the Pl@ntNet part.
-- [ ] "Reference: Wikipedia" and a link to the full article appear with it, and the link opens the right article.
-- [ ] If Wikipedia has no article, the name still shows, with "No Wikipedia article found" instead of a summary. The app doesn't fail.
+- [x] A Wikipedia summary of a few sentences appears under a dividing line, separate from the Pl@ntNet part.
+- [x] "Reference: Wikipedia" and a link to the full article appear with it, and the link opens the right article.
+- [x] If Wikipedia has no article, the name still shows, with "No Wikipedia article found" instead of a summary. The app doesn't fail.
+- [ ] *(Added after step 5)* The summary is in plain, everyday language with something interesting, not botanical jargon. *(Step 5.5.)*
 
 **6. Be warned when it's unsure**
 - [x] At 49% the warning box and the top 3 candidates show. At 50% they don't (the boundary is tested exactly).

@@ -64,6 +64,7 @@ A personal learning project. It's a phone-friendly web page where I take or uplo
    - 5d. The page shows the summary under a dividing line, with "Reference: Wikipedia" and the link
    - 5e. Tests with a fake Wikipedia
    - 5f. Real flowers on the phone, then commit and tag
+5.5. Plain-language summary: an AI (Claude) rewrites the Wikipedia summary in everyday language with one interesting fact, using only Wikipedia's text, labelled honestly as AI-written. (Added after step 5: real Wikipedia summaries were too technical.) Small steps to be planned in 5.5a.
 6. Error handling, plus shrinking photos to about 1 MB **and converting them to JPEG** in the browser before upload (this also removes E10, the HEIC refusal). Includes: the **Try again** button (E2, E3, E7, E8), time limits, and ignoring a late server reply if I've already pressed Start over.
 7. Put it online. Include an app icon (`apple-touch-icon.png`, `favicon.ico`): Safari asks for them, currently getting 404s.
 8. Review
@@ -104,7 +105,10 @@ Setup done: Python 3.15.0 installed from python.org, with certificates set up.
 5b done: `wikipedia.py` with `fetch_summary(name)` returning status `found` / `no_article` / `unavailable`; 11 tests in `tests/test_wikipedia.py` (45 total). Checked against the real Wikipedia.
 5c done: `/identify` adds `"wikipedia": {status, summary, url}` for the best guess only; Pl@ntNet result always returned. 49 tests; real end-to-end check passed.
 5d done: the page shows the Wikipedia summary with "Reference: Wikipedia" and the article link, or the W1/W2 message. Only `https://` links are accepted.
-Next: 5e is already covered (fake-Wikipedia tests written in 5b and 5c), so next is 5f, real flowers on the phone.
+5e: covered by the fake-Wikipedia tests written in 5b and 5c.
+5f done: real flowers on the phone. Layout fixes: photo is a zoomed-in centred square, acknowledgement at the bottom, smaller title. Feedback: Wikipedia summaries are too technical, so step 5.5 adds an AI plain-language rewrite.
+**Step 5 complete** (git tag `step-5`).
+Next: 5.5a, decide the details (spec update, cost check), then I create an Anthropic API key.
 
 ## Environment notes
 
