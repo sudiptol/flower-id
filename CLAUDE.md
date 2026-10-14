@@ -57,7 +57,13 @@ A personal learning project. It's a phone-friendly web page where I take or uplo
    - 4e. The page shows the Pl@ntNet part of states C and D (50% rule)
    - 4f. Tests that don't use the real API (no quota used, work offline)
    - 4g. Real flowers on the phone, then commit and tag
-5. Wikipedia lookup and two-source display
+5. Wikipedia lookup and two-source display, in small steps:
+   - 5a. Explore the Wikipedia API by hand: what does it send back for a flower name, a hybrid with "×", and a name with no article?
+   - 5b. `wikipedia.py`: one function that gets a short summary and article link (5-second limit, `User-Agent` header)
+   - 5c. `/identify` adds the Wikipedia part for the best guess; W1 and W2 still show the Pl@ntNet result
+   - 5d. The page shows the summary under a dividing line, with "Reference: Wikipedia" and the link
+   - 5e. Tests with a fake Wikipedia
+   - 5f. Real flowers on the phone, then commit and tag
 6. Error handling, plus shrinking photos to about 1 MB **and converting them to JPEG** in the browser before upload (this also removes E10, the HEIC refusal). Includes: the **Try again** button (E2, E3, E7, E8), time limits, and ignoring a late server reply if I've already pressed Start over.
 7. Put it online. Include an app icon (`apple-touch-icon.png`, `favicon.ico`): Safari asks for them, currently getting 404s.
 8. Review
@@ -92,7 +98,9 @@ Setup done: Python 3.15.0 installed from python.org, with certificates set up.
 4d done: `/identify` calls Pl@ntNet and returns `{"confident": bool, "candidates": [{scientific_name, common_name, confidence}]}`. Pl@ntNet errors map to E3–E8. Percentages round **down**. Tests use a fake Pl@ntNet (22 tests). The page shows a temporary one-line "Best guess".
 4e done: result screen for states C and D (italic scientific name, common name, confidence, warning and other candidates linking to Wikipedia, Pl@ntNet acknowledgement). 0% shows as "under 1%". Wikipedia summary still to come (step 5).
 4f done: tests for every Pl@ntNet error (E3–E8), the missing key, and a test proving the key never reaches logs or replies (34 tests).
-Next: 4g, real flowers on the phone, then tag `step-4`.
+4g done: real flowers on the phone. Feedback led to the common name becoming the headline. A marigold close-up scored only 14–16% (correct answer was 2nd), so accuracy work is parked for phase 2.
+**Step 4 complete** (git tag `step-4`).
+Next: 5a, explore the Wikipedia API by hand.
 
 ## Environment notes
 

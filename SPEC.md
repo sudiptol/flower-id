@@ -163,12 +163,12 @@ Pass/fail checks for each user story. A story is **done** only when every box ca
 - [x] *(Added in step 3c)* The server checks every upload itself: it refuses non-images (by their first bytes, not their label) and anything over 10 MB.
 
 **3. See the name**
-- [ ] The top result's common name is the largest text on the result screen, with the scientific name in italics underneath.
-- [ ] If Pl@ntNet gives no common name, the scientific name becomes the headline, and there's no blank gap or "None".
+- [x] The top result's common name is the largest text on the result screen, with the scientific name in italics underneath.
+- [x] If Pl@ntNet gives no common name, the scientific name becomes the headline, and there's no blank gap or "None".
 
 **4. See how sure it is**
-- [ ] Confidence shows as a whole-number percentage, for example "92%", not "0.9213". It's always rounded **down**, so 49.97% shows as "49%" and gets the warning. *(Decided in step 4d.)*
-- [ ] The exact text "Identified by Pl@ntNet (confidence X%)" appears on every result.
+- [x] Confidence shows as a whole-number percentage, for example "92%", not "0.9213". It's always rounded **down**, so 49.97% shows as "49%" and gets the warning. *(Decided in step 4d.)*
+- [x] The exact text "Identified by Pl@ntNet (confidence X%)" appears on every result.
 
 **5. Read something interesting**
 - [ ] A Wikipedia summary of a few sentences appears under a dividing line, separate from the Pl@ntNet part.
@@ -176,17 +176,17 @@ Pass/fail checks for each user story. A story is **done** only when every box ca
 - [ ] If Wikipedia has no article, the name still shows, with "No Wikipedia article found" instead of a summary. The app doesn't fail.
 
 **6. Be warned when it's unsure**
-- [ ] At 49% the warning box and the top 3 candidates show. At 50% they don't (the boundary is tested exactly).
-- [ ] If Pl@ntNet returns fewer than 3 candidates, the app shows the ones it has.
-- [ ] Each candidate's name links to its Wikipedia article in a new tab.
+- [x] At 49% the warning box and the top 3 candidates show. At 50% they don't (the boundary is tested exactly).
+- [x] If Pl@ntNet returns fewer than 3 candidates, the app shows the ones it has.
+- [x] Each candidate's name links to its Wikipedia article in a new tab.
 
 **7. Understand failures**
 - [ ] Each problem (no connection, no flower found, daily limit reached, Pl@ntNet or Wikipedia down) shows its own plain-English message saying what happened and what to do.
 - [ ] No error ever shows technical text such as a code dump or "500 Internal Server Error".
-- [ ] My API key never appears on the page, in the page source, or in any error message.
+- [x] My API key never appears on the page, in the page source, or in any error message. *(Automated test since step 4f.)*
 
 **8. Go again**
-- [ ] **Identify another flower** returns to the Start state (A) in one tap, without reloading the page.
+- [x] **Identify another flower** returns to the Start state (A) in one tap, without reloading the page.
 
 **Overall**
 - [ ] On home Wi-Fi, a result appears within 10 seconds of choosing a photo.
