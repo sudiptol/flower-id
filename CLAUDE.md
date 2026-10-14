@@ -73,7 +73,8 @@ Setup done: Python 3.15.0 installed from python.org, with certificates set up.
 2e done: start screen with two photo buttons (`templates/index.html`, `static/style.css`); camera and library tested on the phone.
 2f done: photo preview, non-image message (E1) and Start over (`static/app.js`).
 **Step 2 complete** (git tag `step-2`): acceptance boxes ticked in `SPEC.md`. Still open: "Take a photo" on the Mac, and the full HEIC check in step 3.
-Next: 3a, the `/identify` route.
+3a done: `POST /identify` receives a photo and replies with JSON (filename, type, size); tested with curl.
+Next: 3b, the browser sends the photo and shows the reply.
 
 ## Environment notes
 
