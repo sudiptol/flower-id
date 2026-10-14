@@ -1,0 +1,60 @@
+# Flower ID web app
+
+A personal learning project. It's a phone-friendly web page where I take or upload a flower photo. The app then shows the flower's scientific name, a confidence score and a short Wikipedia summary.
+
+## Decisions made
+
+- **Stack:** Python + Flask. One small app serves both the page and the backend.
+- **Identification:** Pl@ntNet API (free tier, 500 requests per day). It needs an account and an API key, and their terms require an attribution line.
+- **Reference text:** Wikipedia API (no key needed). Link to the article and credit Wikipedia. Requests must send a descriptive `User-Agent` header, or Wikipedia returns 403 Forbidden.
+- **Two sources, always shown separately:**
+  - "Identified by Pl@ntNet (confidence X%)"
+  - "Reference: Wikipedia [link]"
+- **Low confidence (below 50%):** show the best guess with a visible warning, plus the top 3 candidates.
+- **Secrets:** API keys go in a `.env` file. Never put them in code and never paste them in chat. `.env` must be listed in `.gitignore`.
+
+## About me / how to work with me
+
+- I'm a beginner coder (never professional) and I use a Mac.
+- **My real goal is learning how good software is written and the best practices behind it.** Always act as a guide: before each step, explain *why* we're doing it and which practice it teaches. Break work into small sub-steps and say which one is next.
+- Explain every file you create in 2–3 sentences.
+- Prefer simple code over clever code.
+- **Ask before installing anything** (Python packages, Homebrew, tools).
+- Build one small slice at a time.
+- Show Mac Terminal commands only.
+
+## Roadmap
+
+1. Spec, in small steps:
+   - 1a. Start version control (git)
+   - 1b. Problem statement: what and who it's for
+   - 1c. User stories: what I can do with the app
+   - 1d. Screen sketch in text
+   - 1e. Acceptance criteria: how we know each part works
+   - 1f. Error cases
+   - 1g. Out of scope: what we're not building
+   - 1h. Review, answer open questions, sign off, commit
+2. Photo-picker page (no API calls)
+3. Backend receives the image
+4. Pl@ntNet call
+5. Wikipedia lookup and two-source display
+6. Error handling
+7. Put it online
+8. Review
+
+## Current step
+
+Setup done: Python 3.15.0 installed from python.org, with certificates set up.
+1a done: git started (branch `main`), `.gitignore` created. Next: 1b, the problem statement.
+
+## Environment notes
+
+- Use `python3` (3.15.0, at `/Library/Frameworks/Python.framework/Versions/3.15/`). An old Python 3.9 is also on the Mac; ignore it.
+- Homebrew is installed but too old to run on this macOS version, so don't rely on it.
+
+## Still to do in later steps
+
+- Create a virtual environment (`.venv`) and install Flask inside it. Ask first. Probably step 2.
+- Create a Pl@ntNet account and API key before step 4. The key goes in `.env`.
+- Create `.env` at step 4 (`.gitignore` already blocks it).
+- Commit after each finished small step, with a clear message.

@@ -1,0 +1,17 @@
+# Files git must never save.
+
+# Secrets: API keys live here
+.env
+
+# Python's virtual environment (rebuilt from requirements, never shared)
+.venv/
+
+# Python's auto-generated cache files
+__pycache__/
+*.pyc
+
+# Mac clutter
+.DS_Store
+
+# Claude Code's personal settings for this machine
+.claude/settings.local.json
