@@ -108,7 +108,9 @@ Setup done: Python 3.15.0 installed from python.org, with certificates set up.
 5e: covered by the fake-Wikipedia tests written in 5b and 5c.
 5f done: real flowers on the phone. Layout fixes: photo is a zoomed-in centred square, acknowledgement at the bottom, smaller title. Feedback: Wikipedia summaries are too technical, so step 5.5 adds an AI plain-language rewrite.
 **Step 5 complete** (git tag `step-5`).
-5.5 built: "Did you know?" box (server in `wikipedia.py`, page in `app.js`). 53 tests. Waiting for the phone check, then tag `step-5.5`.
+5.5 done: "Did you know?" box (server in `wikipedia.py`, page in `app.js`). 53 tests. Checked on the phone.
+**Step 5.5 complete** (git tag `step-5.5`).
+Next: step 6, error handling and photo shrinking (plan its small steps first).
 
 ## Environment notes
 

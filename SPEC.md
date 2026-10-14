@@ -179,9 +179,9 @@ Pass/fail checks for each user story. A story is **done** only when every box ca
 - [x] A Wikipedia summary of a few sentences appears under a dividing line, separate from the Pl@ntNet part.
 - [x] "Reference: Wikipedia" and a link to the full article appear with it, and the link opens the right article.
 - [x] If Wikipedia has no article, the name still shows, with "No Wikipedia article found" instead of a summary. The app doesn't fail.
-- [ ] *(Step 5.5)* A "Did you know?" fact appears under the summary: the first two sentences of the article's best "fun" section, chosen in this order: Etymology (name origin), then In culture / Folklore / Symbolism, then Uses, then Cultivation / History.
-- [ ] *(Step 5.5)* When the article has none of those sections, the "Did you know?" box simply doesn't appear (no error message).
-- [ ] *(Step 5.5)* Getting the fact needs no extra waiting: the summary and the sections come from one Wikipedia request.
+- [x] *(Step 5.5)* A "Did you know?" fact appears under the summary: the first two sentences of the article's best "fun" section, chosen in this order: Etymology (name origin), then In culture / Folklore / Symbolism, then Uses, then Cultivation / History.
+- [x] *(Step 5.5)* When the article has none of those sections, the "Did you know?" box simply doesn't appear (no error message).
+- [x] *(Step 5.5)* Getting the fact needs no extra waiting: the summary and the sections come from one Wikipedia request.
 
 **6. Be warned when it's unsure**
 - [x] At 49% the warning box and the top 3 candidates show. At 50% they don't (the boundary is tested exactly).
