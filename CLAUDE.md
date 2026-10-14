@@ -100,7 +100,8 @@ Setup done: Python 3.15.0 installed from python.org, with certificates set up.
 4f done: tests for every Pl@ntNet error (E3–E8), the missing key, and a test proving the key never reaches logs or replies (34 tests).
 4g done: real flowers on the phone. Feedback led to the common name becoming the headline. A marigold close-up scored only 14–16% (correct answer was 2nd), so accuracy work is parked for phase 2.
 **Step 4 complete** (git tag `step-4`).
-Next: 5a, explore the Wikipedia API by hand.
+5a done: Wikipedia API explored (facts below).
+Next: 5b, `wikipedia.py`.
 
 ## Environment notes
 
@@ -124,6 +125,14 @@ Next: 5a, explore the Wikipedia API by hand.
 - Suggested acknowledgement: "The image-based plant species identification service used, is based on the Pl@ntNet recognition API, regularly updated and accessible through the site https://my.plantnet.org/". Don't use their logo without checking its terms.
 - Fields to use: `results[i].score`, `results[i].species.scientificNameWithoutAuthor` (headline, may contain "×", e.g. "Iris × hollandica"), `results[i].species.commonNames[0]` (the list can be empty).
 - **Tested in 4c:** a bad key gives **401** (`"message": "Bad token"`); a photo with no plant gives **404** (`"message": "Species not found"`).
+
+## Wikipedia API facts (tested in 5a on 2026-10-14)
+
+- `GET https://en.wikipedia.org/api/rest_v1/page/summary/<Name_with_underscores>` (URL-encode it; "×" works). No key. Must send a descriptive `User-Agent`.
+- Reply fields to use: `type`, `title`, `extract` (the summary), `content_urls.mobile.page` (the article link).
+- No article gives **404**. A name with several meanings gives 200 with `"type": "disambiguation"` and a useless extract ("Rosa or De Rosa may refer to:"): treat it like no article (W1).
+- Redirects happen silently: "Helianthus annuus" returns the "Common sunflower" article. So take the link from `content_urls`, never build it from the name.
+- Summary length: about 120–750 characters (1–5 sentences) in tests. Fine to show in full.
 
 ## Still to do in later steps
 
