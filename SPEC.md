@@ -252,6 +252,6 @@ What this version deliberately does **not** do. If a new idea comes up while bui
 
 This is a **web app**, not a native iPhone app: no Xcode, no App Store. I open it in my phone's web browser.
 
-- **While building (steps 2–6):** the app runs on my Mac. My phone opens it by typing the Mac's local address (like `http://192.168.1.20:5000`) into the browser. This only works at home, with both devices on the same Wi-Fi.
+- **While building (steps 2–6):** the app runs on my Mac. My phone opens it by typing the Mac's local address (like `http://192.168.1.20:5001`) into the browser. This only works at home, with both devices on the same Wi-Fi.
 - **Once online (step 7):** the app lives on a hosting service with a normal `https://` web address, so it works anywhere, including on walks.
 - **App-like feel:** in the phone browser, "Add to Home Screen" gives it an icon like a real app.

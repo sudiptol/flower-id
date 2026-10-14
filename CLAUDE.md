@@ -70,6 +70,7 @@ Next: 2c, smallest possible Flask app ("Hello" on the Mac).
 - Use `python3` (3.15.0, at `/Library/Frameworks/Python.framework/Versions/3.15/`). An old Python 3.9 is also on the Mac; ignore it.
 - After installing or upgrading a package, update `requirements.txt` with `pip freeze > requirements.txt` and commit it. Rebuild the environment with `pip install -r requirements.txt`.
 - Project packages live in `.venv`. Turn it on with `source .venv/bin/activate` (prompt shows `(.venv)`), off with `deactivate`.
+- The app runs on port **5001**, not Flask's usual 5000, because macOS's AirPlay Receiver uses 5000.
 - Homebrew is installed but too old to run on this macOS version, so don't rely on it.
 
 ## Still to do in later steps
