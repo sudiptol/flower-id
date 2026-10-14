@@ -242,6 +242,7 @@ What this version deliberately does **not** do. If a new idea comes up while bui
   - Let me crop to the flower before sending.
   - Photo tips on the start screen ("one flower, filling the frame, in focus").
   - Use a regional plant list instead of the whole world, for where I live.
+  - Show **genus-level** confidence too (Pl@ntNet's `detailed=true` option), e.g. "Marigold (Tagetes): 85%", when it's unsure which exact species. *(Prompted by a marigold close-up that scored only 16%.)*
 - **Tap a candidate** on the unsure screen to swap in its Wikipedia summary.
 - **History** of flowers I've identified, with photos and dates.
 - **Location:** where I saw each flower, on a map.
