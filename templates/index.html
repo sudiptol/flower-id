@@ -21,11 +21,41 @@
       <label class="button" for="library-input">Choose a photo</label>
     </section>
 
-    <!-- State B: Working. For now it shows what the server received; identifying comes in step 4. -->
+    <!-- State B: Working -->
     <section id="preview" hidden>
       <img id="preview-image" class="photo" alt="The photo you chose">
-      <p id="status-note" class="note" aria-live="polite"></p>
+      <p class="note" aria-live="polite">Identifying...</p>
       <button class="button" type="button" data-action="start-over">Start over</button>
+    </section>
+
+    <!-- States C (confident) and D (unsure): the result -->
+    <section id="result" hidden>
+      <img id="result-image" class="photo" alt="The photo you chose">
+
+      <!-- Only shown when unsure (state D) -->
+      <div id="unsure-warning" class="problem" role="alert" hidden>
+        <strong>Not sure about this one.</strong> Compare the options below.
+      </div>
+      <p id="best-guess-label" class="label" hidden>Best guess:</p>
+
+      <h2 id="scientific-name" class="scientific-name"></h2>
+      <p id="common-name" class="common-name"></p>
+      <p class="source">Identified by Pl@ntNet (confidence <span id="confidence"></span>)</p>
+
+      <!-- Only shown when unsure (state D) -->
+      <div id="other-candidates" hidden>
+        <p class="label">Other candidates:</p>
+        <ul id="candidate-list" class="candidates"></ul>
+      </div>
+
+      <p class="small-print">
+        The image-based plant species identification service used, is based on the Pl@ntNet recognition API,
+        regularly updated and accessible through the site <a href="https://my.plantnet.org/">https://my.plantnet.org/</a>
+      </p>
+
+      <!-- The Wikipedia part comes in step 5 -->
+
+      <button class="button" type="button" data-action="start-over">Identify another flower</button>
     </section>
 
     <!-- State E: Problem -->

@@ -51,6 +51,56 @@ button.button {
   color: #555555;
 }
 
+/* Result screen. Scientific names are written in italics, as botanists do. */
+.scientific-name {
+  margin: 16px 0 0;
+  font-size: 28px;
+  font-style: italic;
+  line-height: 1.2;
+}
+
+.common-name {
+  margin: 4px 0 0;
+  font-size: 20px;
+  color: #555555;
+}
+
+.source {
+  margin: 12px 0;
+  font-weight: bold;
+}
+
+.label {
+  margin: 16px 0 4px;
+  font-weight: bold;
+}
+
+.candidates {
+  margin: 0;
+  padding-left: 20px;
+}
+
+.candidates li {
+  margin-bottom: 8px;
+}
+
+.candidates a {
+  font-style: italic;
+  color: #2e6b30;
+}
+
+.small-print {
+  padding-bottom: 16px;
+  border-bottom: 1px solid #cccccc; /* the line that separates the two sources */
+  font-size: 13px;
+  color: #555555;
+}
+
+.small-print a {
+  color: #555555;
+  overflow-wrap: anywhere; /* lets the long link wrap on narrow phones */
+}
+
 /* Warning box for problems: what happened and what to do */
 .problem {
   padding: 16px;

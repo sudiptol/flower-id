@@ -5,18 +5,20 @@ const MAX_PHOTO_BYTES = 10 * 1024 * 1024;
 
 const startSection = document.getElementById("start");
 const previewSection = document.getElementById("preview");
+const resultSection = document.getElementById("result");
 const problemSection = document.getElementById("problem");
 
 const cameraInput = document.getElementById("camera-input");
 const libraryInput = document.getElementById("library-input");
 const previewImage = document.getElementById("preview-image");
-const statusNote = document.getElementById("status-note");
+const resultImage = document.getElementById("result-image");
 const problemMessage = document.getElementById("problem-message");
 
 // Show one state and hide the others.
 function showState(section) {
   startSection.hidden = true;
   previewSection.hidden = true;
+  resultSection.hidden = true;
   problemSection.hidden = true;
   section.hidden = false;
 }
@@ -31,6 +33,61 @@ function showProblem(message) {
 function isImage(file) {
   const name = file.name.toLowerCase();
   return file.type.startsWith("image/") || name.endsWith(".heic") || name.endsWith(".heif");
+}
+
+// 92 -> "92%", 0 -> "under 1%" (a 0.8% candidate shouldn't look like it scored nothing)
+function formatConfidence(percent) {
+  if (percent < 1) {
+    return "under 1%";
+  }
+  return percent + "%";
+}
+
+// "Iris × hollandica" -> "https://en.wikipedia.org/wiki/Iris_%C3%97_hollandica"
+function wikipediaLink(scientificName) {
+  return "https://en.wikipedia.org/wiki/" + encodeURIComponent(scientificName.replaceAll(" ", "_"));
+}
+
+// Fill in the result screen: state C when confident, state D when not.
+// Names come from another service, so they're always set with textContent, never as HTML.
+function showResult(result) {
+  const best = result.candidates[0];
+
+  document.getElementById("scientific-name").textContent = best.scientific_name;
+
+  const commonName = document.getElementById("common-name");
+  commonName.textContent = best.common_name || "";
+  commonName.hidden = !best.common_name; // no blank line when there's no common name
+
+  document.getElementById("confidence").textContent = formatConfidence(best.confidence);
+
+  // State D extras: the warning, the "Best guess" label and the other candidates.
+  const unsure = !result.confident;
+  document.getElementById("unsure-warning").hidden = !unsure;
+  document.getElementById("best-guess-label").hidden = !unsure;
+
+  const others = result.candidates.slice(1);
+  const list = document.getElementById("candidate-list");
+  list.replaceChildren();
+  for (const candidate of others) {
+    const link = document.createElement("a");
+    link.href = wikipediaLink(candidate.scientific_name);
+    link.target = "_blank"; // opens in a new tab
+    link.rel = "noopener";
+    link.textContent = candidate.scientific_name;
+
+    const item = document.createElement("li");
+    item.append(link);
+    if (candidate.common_name) {
+      item.append(" (" + candidate.common_name + ")");
+    }
+    item.append(": " + formatConfidence(candidate.confidence));
+    list.append(item);
+  }
+  document.getElementById("other-candidates").hidden = !(unsure && others.length > 0);
+
+  resultImage.src = previewImage.src;
+  showState(resultSection);
 }
 
 // Send the photo to the server and show its reply.
@@ -48,7 +105,7 @@ async function sendPhoto(file) {
   }
 
   if (!response.ok) {
-    // Our server explains known problems (like E1 or E9) in an "error" field.
+    // Our server explains known problems (E1, E3-E7, E9, E10) in an "error" field.
     // Anything else, such as a crash, gets the general message E8.
     let message = "Something went wrong. Please try again.";
     try {
@@ -63,10 +120,7 @@ async function sendPhoto(file) {
     return;
   }
 
-  // Temporary one-line result. Step 4e replaces this with the full result screen.
-  const result = await response.json();
-  const best = result.candidates[0];
-  statusNote.textContent = "Best guess: " + best.scientific_name + " (" + best.confidence + "%)";
+  showResult(await response.json());
 }
 
 function handlePhoto(event) {
@@ -88,7 +142,6 @@ function handlePhoto(event) {
 
   // Show the photo straight from the device while it uploads.
   previewImage.src = URL.createObjectURL(file);
-  statusNote.textContent = "Identifying...";
   showState(previewSection);
 
   sendPhoto(file);
@@ -96,8 +149,9 @@ function handlePhoto(event) {
 
 function startOver() {
   if (previewImage.src) {
-    URL.revokeObjectURL(previewImage.src); // Free the memory used by the preview.
+    URL.revokeObjectURL(previewImage.src); // Free the memory used by the photo.
     previewImage.removeAttribute("src");
+    resultImage.removeAttribute("src");
   }
   // Clear the pickers so choosing the same photo again still works.
   cameraInput.value = "";

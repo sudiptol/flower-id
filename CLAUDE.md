@@ -90,7 +90,8 @@ Setup done: Python 3.15.0 installed from python.org, with certificates set up.
 4b done: key saved in `.env` (26 characters, checked without displaying it); `.env.example` is the template in git; python-dotenv 1.2.4 loads it in `app.py`.
 4c done: `plantnet.py` + `scripts/try_plantnet.py`. Real call with a mixed bouquet (`samples/IMG_2570.jpg`, ignored by git): status 200, top score only **2.6%** (Lisianthus), then Dutch Iris 1.6% and Bastard speedwell 0.8%. A real-world example of the under-50% case.
 4d done: `/identify` calls Pl@ntNet and returns `{"confident": bool, "candidates": [{scientific_name, common_name, confidence}]}`. Pl@ntNet errors map to E3–E8. Percentages round **down**. Tests use a fake Pl@ntNet (22 tests). The page shows a temporary one-line "Best guess".
-Next: 4e, the page shows the Pl@ntNet part of states C and D.
+4e done: result screen for states C and D (italic scientific name, common name, confidence, warning and other candidates linking to Wikipedia, Pl@ntNet acknowledgement). 0% shows as "under 1%". Wikipedia summary still to come (step 5).
+Next: 4f, tests for every Pl@ntNet error (fake Pl@ntNet), then 4g on the phone.
 
 ## Environment notes
 
