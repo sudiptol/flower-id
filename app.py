@@ -9,4 +9,6 @@ def home():
 
 
 if __name__ == "__main__":
-    app.run(debug=True, port=5001)
+    # host="0.0.0.0" lets other devices on my home Wi-Fi (my phone) reach the app.
+    # Only run it like this on a network I trust.
+    app.run(debug=True, host="0.0.0.0", port=5001)
