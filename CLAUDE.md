@@ -49,7 +49,14 @@ A personal learning project. It's a phone-friendly web page where I take or uplo
    - 3c. Server double-checks the file: images only, size limit (never trust the browser). Check the file's actual first bytes, not its `content_type` label: curl sent a real HEIC as `application/octet-stream`.
    - 3d. First automated tests with pytest (ask before installing)
    - 3e. Check on phone (including a real HEIC photo) and commit
-4. Pl@ntNet call
+4. Pl@ntNet call, in small steps:
+   - 4a. I create a Pl@ntNet account and API key; Claude reads the API docs and terms (attribution, size limits, HEIC, what happens to photos)
+   - 4b. Put the key in `.env` (I type it myself, never in chat) and load it with python-dotenv (ask first)
+   - 4c. `plantnet.py`: one function that sends a photo to Pl@ntNet; try it once from Terminal and study the raw reply
+   - 4d. `/identify` returns the name, common name, confidence and top 3
+   - 4e. The page shows the Pl@ntNet part of states C and D (50% rule)
+   - 4f. Tests that don't use the real API (no quota used, work offline)
+   - 4g. Real flowers on the phone, then commit and tag
 5. Wikipedia lookup and two-source display
 6. Error handling, plus shrinking photos to about 1 MB in the browser before upload. Includes: the **Try again** button (E2, E3, E7, E8), time limits, and ignoring a late server reply if I've already pressed Start over.
 7. Put it online
@@ -77,7 +84,9 @@ Setup done: Python 3.15.0 installed from python.org, with certificates set up.
 3b done: the page uploads the photo with `fetch` and shows the server's reply; E2 and E8 messages wired up. Phone test: iPhone Safari sends **JPEG, about 2 MB** (it converts HEIC itself).
 3c done: server checks first bytes (JPEG, PNG, HEIC) and a 10 MB limit; new error E9 in the spec. The page also checks size before uploading. `MAX_PHOTO_BYTES` lives in both `app.py` and `static/app.js`: change both together.
 3d done: pytest 9.1.1 installed; 11 tests in `tests/test_app.py`; dev-only tools pinned in `requirements-dev.txt`.
-Next: 3e, final phone check and finish step 3.
+3e done: real iPhone photos (camera and library) pass the server checks.
+**Step 3 complete** (git tag `step-3`).
+Next: 4a, Pl@ntNet account and API key (I do this myself) while Claude reads the API docs and terms.
 
 ## Environment notes
 
@@ -92,7 +101,5 @@ Next: 3e, final phone check and finish step 3.
 
 ## Still to do in later steps
 
-- Create a Pl@ntNet account and API key before step 4. The key goes in `.env`. Read their terms for attribution wording and photo handling.
-- Step 4: check whether Pl@ntNet accepts HEIC (only matters for HEIC files uploaded from the Mac).
 - Create `.env` at step 4 (`.gitignore` already blocks it).
 - Commit after each finished small step, with a clear message.
