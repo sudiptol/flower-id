@@ -1,3 +1,4 @@
+import logging
 import os
 
 import requests
@@ -25,6 +26,9 @@ E7_PLANTNET_DOWN = "Pl@ntNet isn't responding right now. Try again in a few minu
 E8_UNEXPECTED = "Something went wrong. Please try again."
 
 app = Flask(__name__)
+# Show our INFO lines ("Received photo", the Pl@ntNet candidates...) in the log online too.
+# Without this, they only appear in debug mode on the Mac, and online the log would be silent.
+app.logger.setLevel(logging.INFO)
 # Flask refuses anything bigger before our code even runs (error 413, handled below).
 app.config["MAX_CONTENT_LENGTH"] = MAX_PHOTO_BYTES
 
@@ -137,6 +141,8 @@ def photo_too_large(error):
     return error_reply("That photo is too large (over 10 MB). Please choose a smaller one.", 413)
 
 
+# This only runs when I start the app on my Mac with "python app.py".
+# Online, gunicorn loads the app without running this, so debug mode is never on there.
 if __name__ == "__main__":
     # host="0.0.0.0" lets other devices on my home Wi-Fi (my phone) reach the app.
     # Only run it like this on a network I trust.

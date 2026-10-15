@@ -131,7 +131,8 @@ Setup done: Python 3.15.0 installed from python.org, with certificates set up.
 6f done: "slow lane" throttling proxies (scratchpad, not in the project) at 40, 8 and 2 KB/s. Found and fixed a Safari-only bug: its timeout error isn't named "TimeoutError", so the page showed E2; it now checks `deadline.aborted`. Photo sizes after shrinking vary a lot (151–531 KB seen).
 **Step 6 complete** (git tag `step-6`).
 7a done: host = Render, lock = remembered passcode; spec story 9 and E11 approved.
-Next: 7b, production settings (ask before installing gunicorn).
+7b done: gunicorn 26.2.0 (`gunicorn.conf.py`: bind 0.0.0.0:$PORT, 2 workers, timeout 40 s); `.python-version` = 3.15; debug is only on with `python app.py`; INFO logs enabled so they show under gunicorn too. Rehearsed locally: `.venv/bin/gunicorn app:app` serves on port 8000.
+Next: 7c, the passcode lock.
 
 ## Environment notes
 

@@ -72,6 +72,19 @@ def upload(client, data, filename="photo.jpg"):
     return client.post("/identify", data={"photo": (io.BytesIO(data), filename)})
 
 
+# --- Safe to put online ---
+
+def test_debug_mode_is_off_when_loaded_like_gunicorn_does():
+    # Gunicorn imports the app, just as this test file does. Debug mode online would
+    # show code details to anyone, so it must only ever be on with "python app.py".
+    assert app.debug is False
+
+
+def test_info_log_lines_are_shown_even_without_debug_mode():
+    # Online, the log is the only way to see what happened ("Received photo", the candidates...).
+    assert app.logger.isEnabledFor(logging.INFO)
+
+
 # --- The page ---
 
 def test_home_page_loads(client):
