@@ -198,7 +198,8 @@ Pass/fail checks for each user story. A story is **done** only when every box ca
 - [x] **Identify another flower** returns to the Start state (A) in one tap, without reloading the page.
 
 **Overall**
-- [ ] On home Wi-Fi, a result appears within 10 seconds of choosing a photo.
+- [x] On home Wi-Fi, a result appears within 10 seconds of choosing a photo. *(Seen throughout testing; on a simulated weak signal of 40 KB/s, about 15 seconds.)*
+- [x] *(Added in step 6)* On a very weak signal the page gives up after 35 seconds with "taking too long" and Try again, in both Chrome and Safari.
 - [x] Everything fits the phone screen width with no sideways scrolling.
 - [x] *(Added in step 6)* Photos are shrunk in the browser to about 1 MB and converted to JPEG before uploading, so results come quickly on weak mobile signal and HEIC files from the Mac work. *(Step 6a: longest side 1600 px; a real iPhone photo arrived at 531 KB instead of about 2,000 KB.)*
 - [x] *(Added in step 6)* The hidden location data (GPS) that phones store inside photos is removed before uploading. Shrinking the photo in the browser does this automatically; we check it. *(Step 6a: tested with a photo carrying fake GPS data.)*

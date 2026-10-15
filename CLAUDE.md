@@ -121,7 +121,9 @@ Setup done: Python 3.15.0 installed from python.org, with certificates set up.
 6c done: every server error carries `can_retry` (via `error_reply()` in `app.py`); the page shows **Try again** only then (E2, E3, E7, E8) and re-sends the same shrunk photo. Page messages are named constants in `app.js`. 56 tests.
 6d done: numbered attempts (`startNewAttempt` / `isOutdated` in `app.js`); late replies and late failures are ignored after Start over; Start over during shrinking means no upload. Race tests in the browser, plus a deliberate-bug check.
 6e in progress: all 12 spec messages match the code word for word; E1, E4, E6 (wrong key on a second server, key absent from log), E9, E10 triggered for real from the Mac. Phone: E2 + Try again and E4 confirmed, no technical text anywhere. 6e done.
-Next: 6f, simulated weak signal, then tag `step-6`.
+6f done: "slow lane" throttling proxies (scratchpad, not in the project) at 40, 8 and 2 KB/s. Found and fixed a Safari-only bug: its timeout error isn't named "TimeoutError", so the page showed E2; it now checks `deadline.aborted`. Photo sizes after shrinking vary a lot (151–531 KB seen).
+**Step 6 complete** (git tag `step-6`).
+Next: step 7, put it online (plan its small steps first).
 
 ## Environment notes
 
@@ -129,6 +131,7 @@ Next: 6f, simulated weak signal, then tag `step-6`.
 - Two package lists: `requirements.txt` holds what the app needs to run (also used online), and `requirements-dev.txt` adds tools only needed on the Mac, like pytest. After adding a package, put it in the right file with its exact version, and commit. Rebuild everything with `pip install -r requirements-dev.txt`.
 - When breaking code on purpose to prove a test works, commit the file first so `git checkout` can restore it (or undo by hand and search for leftovers).
 - When testing the page, check what is **actually drawn** (`element.checkVisibility()`, screenshots), not just the `hidden` property: a CSS `display` rule once overrode `hidden` (fixed with a global `[hidden] { display: none !important; }`). Wait for the page to settle rather than using fixed delays.
+- Browsers differ: always confirm page behaviour on my real iPhone (Safari), not only in Chrome. Prefer checking our own state (e.g. `deadline.aborted`) over interpreting browser error names.
 - **Run the tests before every commit:** `python -m pytest` (with `.venv` active). Add tests for each new behaviour, including failures.
 - Project packages live in `.venv`. Turn it on with `source .venv/bin/activate` (prompt shows `(.venv)`), off with `deactivate`.
 - Find the Mac's Wi-Fi address with `ipconfig getifaddr en0` (it was 192.168.86.23 on 2026-10-14; it can change). The phone opens `http://<that address>:5001`.
