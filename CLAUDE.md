@@ -120,7 +120,8 @@ Setup done: Python 3.15.0 installed from python.org, with certificates set up.
 6b done: the page gives up after 35 s (`PAGE_TIMEOUT_MS`, via `AbortSignal.timeout`) and shows E3, including when the reply stalls mid-download. No signal still shows E2.
 6c done: every server error carries `can_retry` (via `error_reply()` in `app.py`); the page shows **Try again** only then (E2, E3, E7, E8) and re-sends the same shrunk photo. Page messages are named constants in `app.js`. 56 tests.
 6d done: numbered attempts (`startNewAttempt` / `isOutdated` in `app.js`); late replies and late failures are ignored after Start over; Start over during shrinking means no upload. Race tests in the browser, plus a deliberate-bug check.
-6e in progress: all 12 spec messages match the code word for word; E1, E4, E6 (wrong key on a second server, key absent from log), E9, E10 triggered for real from the Mac. Waiting for the phone checklist (E2 + Try again, E4).
+6e in progress: all 12 spec messages match the code word for word; E1, E4, E6 (wrong key on a second server, key absent from log), E9, E10 triggered for real from the Mac. Phone: E2 + Try again and E4 confirmed, no technical text anywhere. 6e done.
+Next: 6f, simulated weak signal, then tag `step-6`.
 
 ## Environment notes
 

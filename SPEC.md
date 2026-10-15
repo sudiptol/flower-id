@@ -189,8 +189,9 @@ Pass/fail checks for each user story. A story is **done** only when every box ca
 - [x] Each candidate's name links to its Wikipedia article in a new tab.
 
 **7. Understand failures**
-- [ ] Each problem (no connection, no flower found, daily limit reached, Pl@ntNet or Wikipedia down) shows its own plain-English message saying what happened and what to do.
-- [ ] No error ever shows technical text such as a code dump or "500 Internal Server Error".
+- [x] Each problem (no connection, no flower found, daily limit reached, Pl@ntNet or Wikipedia down) shows its own plain-English message saying what happened and what to do. *(Step 6e: all 12 messages checked word for word against the code; E1, E2, E4, E6, E9, E10 triggered for real.)*
+- [x] No error ever shows technical text such as a code dump or "500 Internal Server Error".
+- [x] *(Added in step 6c)* **Try again** appears only for E2, E3, E7 and E8, and re-sends the same photo.
 - [x] My API key never appears on the page, in the page source, or in any error message. *(Automated test since step 4f.)*
 
 **8. Go again**
