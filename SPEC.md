@@ -231,8 +231,8 @@ Every way the app can fail, and exactly what I see. The exact error codes Pl@ntN
 | E7 | Pl@ntNet is down | "Pl@ntNet isn't responding right now. Try again in a few minutes." | Try again, Start over |
 | E8 | Anything unexpected | "Something went wrong. Please try again." | Try again, Start over |
 | E9 | The photo is over 10 MB *(added in step 3c)* | "That photo is too large (over 10 MB). Please choose a smaller one." | Start over |
-| E11 | Wrong passcode *(added in step 7)* | "That passcode isn't right. Please try again." | (stays on the passcode box) |
 | E10 | A HEIC file, e.g. uploaded from the Mac; Pl@ntNet only accepts JPEG and PNG *(added in step 4a; since step 6a the page converts photos to JPEG, so this only appears in a browser that can't read HEIC, such as Chrome on the Mac. The server keeps the check as a safety net)* | "HEIC photos can't be identified yet. Please use a JPG or PNG." | Start over |
+| E11 | Wrong passcode *(added in step 7)* | "That passcode isn't right. Please try again." | (stays on the passcode box) |
 
 ### Partial failures (still show the result)
 
