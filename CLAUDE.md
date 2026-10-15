@@ -119,7 +119,8 @@ Setup done: Python 3.15.0 installed from python.org, with certificates set up.
 6a built: `shrinkPhoto()` in `app.js` (longest side 1600 px, JPEG 0.85; strips EXIF/GPS; falls back to the original). Measured on the bouquet: Pl@ntNet gives identical results for the same photo twice; the 1600-px copy (518 KB vs 2.8 MB) gave the same top two guesses. The server log shows "Received photo: N KB". Phone check: 531 KB (was about 2,000), right way up, identification normal.
 6b done: the page gives up after 35 s (`PAGE_TIMEOUT_MS`, via `AbortSignal.timeout`) and shows E3, including when the reply stalls mid-download. No signal still shows E2.
 6c done: every server error carries `can_retry` (via `error_reply()` in `app.py`); the page shows **Try again** only then (E2, E3, E7, E8) and re-sends the same shrunk photo. Page messages are named constants in `app.js`. 56 tests.
-Next: 6d, ignore a late reply after Start over.
+6d done: numbered attempts (`startNewAttempt` / `isOutdated` in `app.js`); late replies and late failures are ignored after Start over; Start over during shrinking means no upload. Race tests in the browser, plus a deliberate-bug check.
+Next: 6e, go through every error case in SPEC.md section 5.
 
 ## Environment notes
 
