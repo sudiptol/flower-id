@@ -27,6 +27,7 @@ Format: *I can [do something] so that [reason]*. Ordered by importance.
 6. **Be warned when it's unsure:** when confidence is below 50%, I can see a clear warning and the top 3 candidates, so that I'm not misled and can compare the options myself.
 7. **Understand failures:** when something goes wrong (no signal, no flower found, daily limit reached), I can see a plain-English message saying what happened and what to do, so that I'm never left staring at a blank or broken page.
 8. **Go again:** I can start a new identification with one tap, so that I can identify several flowers on one walk without reloading.
+9. **Only me** *(added in step 7)*: once the app is online, I enter a passcode once on each device, and the app remembers it, so that strangers who find the web address can't use up my 500 identifications per day.
 
 ### Decisions
 
@@ -197,6 +198,12 @@ Pass/fail checks for each user story. A story is **done** only when every box ca
 **8. Go again**
 - [x] **Identify another flower** returns to the Start state (A) in one tap, without reloading the page.
 
+**9. Only me** *(step 7)*
+- [ ] Without the passcode, the app shows only a passcode box. The server itself refuses identifications without it (not just the page), so nobody can get round it by calling the server directly.
+- [ ] After entering the right passcode once, that device goes straight to the app for about a year.
+- [ ] A wrong passcode shows E11, and each wrong try is slowed down by a second or so, to make guessing impractical.
+- [ ] The passcode lives in `.env` on the Mac and in Render's settings online, never in the code, git or chat (like the Pl@ntNet key).
+
 **Overall**
 - [x] On home Wi-Fi, a result appears within 10 seconds of choosing a photo. *(Seen throughout testing; on a simulated weak signal of 40 KB/s, about 15 seconds.)*
 - [x] *(Added in step 6)* On a very weak signal the page gives up after 35 seconds with "taking too long" and Try again, in both Chrome and Safari.
@@ -224,6 +231,7 @@ Every way the app can fail, and exactly what I see. The exact error codes Pl@ntN
 | E7 | Pl@ntNet is down | "Pl@ntNet isn't responding right now. Try again in a few minutes." | Try again, Start over |
 | E8 | Anything unexpected | "Something went wrong. Please try again." | Try again, Start over |
 | E9 | The photo is over 10 MB *(added in step 3c)* | "That photo is too large (over 10 MB). Please choose a smaller one." | Start over |
+| E11 | Wrong passcode *(added in step 7)* | "That passcode isn't right. Please try again." | (stays on the passcode box) |
 | E10 | A HEIC file, e.g. uploaded from the Mac; Pl@ntNet only accepts JPEG and PNG *(added in step 4a; since step 6a the page converts photos to JPEG, so this only appears in a browser that can't read HEIC, such as Chrome on the Mac. The server keeps the check as a safety net)* | "HEIC photos can't be identified yet. Please use a JPG or PNG." | Start over |
 
 ### Partial failures (still show the result)
@@ -266,7 +274,7 @@ What this version deliberately does **not** do. If a new idea comes up while bui
 
 ### Not in this version
 
-- **User accounts or sign-up.** It's just me. (A simple lock to protect my daily limit *is* in scope, at step 7.)
+- **User accounts or sign-up.** It's just me. (A simple passcode lock to protect my daily limit *is* in scope: story 9.)
 - **Working offline.** Identification needs Pl@ntNet, so there's no signal, no result. The app only has to fail clearly (error E2).
 - **Saving my photos.** My app passes each photo to Pl@ntNet and keeps no copy. Pl@ntNet's terms say they don't store photos either: they're kept in memory only during identification.
 - **Polished visual design**, such as custom fonts, animations or dark mode. Clean and readable is enough.
@@ -277,5 +285,5 @@ What this version deliberately does **not** do. If a new idea comes up while bui
 This is a **web app**, not a native iPhone app: no Xcode, no App Store. I open it in my phone's web browser.
 
 - **While building (steps 2–6):** the app runs on my Mac. My phone opens it by typing the Mac's local address (like `http://192.168.1.20:5001`) into the browser. This only works at home, with both devices on the same Wi-Fi.
-- **Once online (step 7):** the app lives on a hosting service with a normal `https://` web address, so it works anywhere, including on walks.
+- **Once online (step 7):** the app lives on **Render's free tier** with a normal `https://` web address, so it works anywhere, including on walks. It sleeps after 15 minutes unused and takes about a minute to wake, so **open it before taking photos**.
 - **App-like feel:** in the phone browser, "Add to Home Screen" gives it an icon like a real app.

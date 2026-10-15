@@ -72,7 +72,14 @@ A personal learning project. It's a phone-friendly web page where I take or uplo
    - 6d. Ignore a late reply if I've already pressed Start over
    - 6e. Go through every error case in SPEC.md section 5 and its acceptance criteria; trigger each one for real where possible
    - 6f. A real test on mobile data (outside home Wi-Fi isn't possible until step 7, so simulate weak signal), then tag
-7. Put it online. Use a production server instead of Flask's built-in one (Flask warns: "This is a development server. Do not use it in a production deployment."), and turn `debug=True` off. Include an app icon (`apple-touch-icon.png`, `favicon.ico`): Safari asks for them, currently getting 404s.
+7. Put it online on **Render's free tier** (decided 2026-10-15; deploys from a private GitHub repository). Small steps:
+   - 7a. Spec: story 9 "Only me" (remembered passcode), E11, Render notes
+   - 7b. Production settings: `debug` off unless running locally; gunicorn instead of Flask's development server (ask before installing)
+   - 7c. The passcode lock: checked on the server; remembered with a signed cookie; wrong tries slowed down. `APP_PASSCODE` and `SECRET_KEY` in `.env` / Render settings
+   - 7d. App icon (`apple-touch-icon.png`, `favicon.ico`): Safari asks for them, currently getting 404s
+   - 7e. Private GitHub repository, after scanning the whole git history for secrets
+   - 7f. Render service; I type the secrets into Render's settings myself
+   - 7g. A real walk on mobile data, then tag `step-7`
 8. Review
 
 ## Current step
@@ -123,7 +130,7 @@ Setup done: Python 3.15.0 installed from python.org, with certificates set up.
 6e in progress: all 12 spec messages match the code word for word; E1, E4, E6 (wrong key on a second server, key absent from log), E9, E10 triggered for real from the Mac. Phone: E2 + Try again and E4 confirmed, no technical text anywhere. 6e done.
 6f done: "slow lane" throttling proxies (scratchpad, not in the project) at 40, 8 and 2 KB/s. Found and fixed a Safari-only bug: its timeout error isn't named "TimeoutError", so the page showed E2; it now checks `deadline.aborted`. Photo sizes after shrinking vary a lot (151–531 KB seen).
 **Step 6 complete** (git tag `step-6`).
-Next: step 7, put it online (plan its small steps first).
+7a in progress: host = Render, lock = remembered passcode; spec drafted, waiting for my approval.
 
 ## Environment notes
 
