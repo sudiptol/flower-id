@@ -23,6 +23,20 @@ const E9_TOO_LARGE = "That photo is too large (over 10 MB). Please choose a smal
 // The photo being identified (already shrunk), kept so "Try again" can send it again.
 let currentPhoto = null;
 
+// Every new photo, Try again and Start over begins a new numbered attempt.
+// A reply that arrives for an older attempt is ignored, so a slow answer for
+// the previous flower never appears on top of the next one.
+let currentAttempt = 0;
+
+function startNewAttempt() {
+  currentAttempt += 1;
+  return currentAttempt;
+}
+
+function isOutdated(attempt) {
+  return attempt !== currentAttempt;
+}
+
 const startSection = document.getElementById("start");
 const previewSection = document.getElementById("preview");
 const resultSection = document.getElementById("result");
@@ -178,8 +192,8 @@ async function shrinkPhoto(file) {
   }
 }
 
-// Send the photo to the server and show its reply.
-async function sendPhoto(photo) {
+// Send the photo to the server and show its reply, unless a newer attempt has started meanwhile.
+async function sendPhoto(photo, attempt) {
   const formData = new FormData();
   formData.append("photo", photo, "photo.jpg");
 
@@ -191,12 +205,19 @@ async function sendPhoto(photo) {
       signal: AbortSignal.timeout(PAGE_TIMEOUT_MS), // cancels the request if it takes too long
     });
   } catch (error) {
+    if (isOutdated(attempt)) {
+      return;
+    }
     if (error.name === "TimeoutError") {
       showProblem(E3_TOO_SLOW, true);
     } else {
       // Otherwise fetch only fails like this when the server can't be reached at all.
       showProblem(E2_NO_CONNECTION, true);
     }
+    return;
+  }
+
+  if (isOutdated(attempt)) {
     return;
   }
 
@@ -214,6 +235,9 @@ async function sendPhoto(photo) {
     } catch (error) {
       // The reply wasn't JSON, so keep the general message.
     }
+    if (isOutdated(attempt)) {
+      return;
+    }
     showProblem(message, canRetry);
     return;
   }
@@ -222,8 +246,14 @@ async function sendPhoto(photo) {
   try {
     result = await response.json();
   } catch (error) {
+    if (isOutdated(attempt)) {
+      return;
+    }
     // The deadline can also run out while the reply is still downloading.
     showProblem(error.name === "TimeoutError" ? E3_TOO_SLOW : E8_UNEXPECTED, true);
+    return;
+  }
+  if (isOutdated(attempt)) {
     return;
   }
   showResult(result);
@@ -235,6 +265,8 @@ async function handlePhoto(event) {
     return; // The person closed the picker without choosing anything.
   }
 
+  const attempt = startNewAttempt();
+
   if (!isImage(file)) {
     showProblem(E1_NOT_A_PHOTO, false);
     return;
@@ -245,6 +277,9 @@ async function handlePhoto(event) {
   showState(previewSection);
 
   const photo = await shrinkPhoto(file);
+  if (isOutdated(attempt)) {
+    return; // Start over was pressed while the photo was being shrunk
+  }
 
   // Checked here too, so a huge photo isn't uploaded only to be refused.
   // Checked after shrinking, so a big photo that shrinks small enough is fine.
@@ -254,16 +289,17 @@ async function handlePhoto(event) {
   }
 
   currentPhoto = photo;
-  sendPhoto(photo);
+  sendPhoto(photo, attempt);
 }
 
 // Send the same photo again, without retaking or choosing it.
 function tryAgain() {
   showState(previewSection);
-  sendPhoto(currentPhoto);
+  sendPhoto(currentPhoto, startNewAttempt());
 }
 
 function startOver() {
+  startNewAttempt(); // any reply still on its way is now outdated
   if (previewImage.src) {
     URL.revokeObjectURL(previewImage.src); // Free the memory used by the photo.
     previewImage.removeAttribute("src");
