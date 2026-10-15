@@ -130,7 +130,8 @@ Setup done: Python 3.15.0 installed from python.org, with certificates set up.
 6e in progress: all 12 spec messages match the code word for word; E1, E4, E6 (wrong key on a second server, key absent from log), E9, E10 triggered for real from the Mac. Phone: E2 + Try again and E4 confirmed, no technical text anywhere. 6e done.
 6f done: "slow lane" throttling proxies (scratchpad, not in the project) at 40, 8 and 2 KB/s. Found and fixed a Safari-only bug: its timeout error isn't named "TimeoutError", so the page showed E2; it now checks `deadline.aborted`. Photo sizes after shrinking vary a lot (151–531 KB seen).
 **Step 6 complete** (git tag `step-6`).
-7a in progress: host = Render, lock = remembered passcode; spec drafted, waiting for my approval.
+7a done: host = Render, lock = remembered passcode; spec story 9 and E11 approved.
+Next: 7b, production settings (ask before installing gunicorn).
 
 ## Environment notes
 
