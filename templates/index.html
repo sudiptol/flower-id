@@ -11,8 +11,19 @@
   <main>
     <h1>Flower ID</h1>
 
+    <!-- Locked: the passcode box (SPEC.md story 9). The server decides which section shows first. -->
+    <section id="locked"{% if unlocked %} hidden{% endif %}>
+      <form id="unlock-form">
+        <label for="passcode" class="label">Passcode</label>
+        <!-- autocomplete lets the phone's password manager offer to save and fill it -->
+        <input id="passcode" name="passcode" type="password" autocomplete="current-password" required>
+        <p id="unlock-problem" class="problem" role="alert" hidden></p>
+        <button class="button" type="submit">Unlock</button>
+      </form>
+    </section>
+
     <!-- State A: Start -->
-    <section id="start">
+    <section id="start"{% if not unlocked %} hidden{% endif %}>
       <!-- capture="environment" asks the phone to open its back camera directly -->
       <input class="visually-hidden" id="camera-input" type="file" accept="image/*" capture="environment">
       <label class="button" for="camera-input">Take a photo</label>

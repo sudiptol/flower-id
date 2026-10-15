@@ -132,7 +132,7 @@ Setup done: Python 3.15.0 installed from python.org, with certificates set up.
 **Step 6 complete** (git tag `step-6`).
 7a done: host = Render, lock = remembered passcode; spec story 9 and E11 approved.
 7b done: gunicorn 26.2.0 (`gunicorn.conf.py`: bind 0.0.0.0:$PORT, 2 workers, timeout 40 s); `.python-version` = 3.15; debug is only on with `python app.py`; INFO logs enabled so they show under gunicorn too. Rehearsed locally: `.venv/bin/gunicorn app:app` serves on port 8000.
-Next: 7c, the passcode lock.
+7c built: `/unlock` checks `APP_PASSCODE` (constant-time compare, 1 s wait on a wrong try, fails closed if unset); a signed session cookie (`SECRET_KEY`) lasts 365 days, HttpOnly, and Secure on Render (`RENDER=true`); `/identify` refuses without it (401, `locked`). Page: passcode box first when locked; a 401 later goes back to it. 65 tests. Waiting for me to add `APP_PASSCODE` and `SECRET_KEY` to `.env` and try it on the phone.
 
 ## Environment notes
 

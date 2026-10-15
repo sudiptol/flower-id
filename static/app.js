@@ -37,6 +37,7 @@ function isOutdated(attempt) {
   return attempt !== currentAttempt;
 }
 
+const lockedSection = document.getElementById("locked");
 const startSection = document.getElementById("start");
 const previewSection = document.getElementById("preview");
 const resultSection = document.getElementById("result");
@@ -51,6 +52,7 @@ const tryAgainButton = document.getElementById("try-again");
 
 // Show one state and hide the others.
 function showState(section) {
+  lockedSection.hidden = true;
   startSection.hidden = true;
   previewSection.hidden = true;
   resultSection.hidden = true;
@@ -222,6 +224,12 @@ async function sendPhoto(photo, attempt) {
     return;
   }
 
+  if (response.status === 401) {
+    // The "remembered" cookie has expired or been cleared: ask for the passcode again.
+    showState(lockedSection);
+    return;
+  }
+
   if (!response.ok) {
     // Our server explains known problems (E1, E3-E7, E9, E10) in an "error" field,
     // and says whether trying again could help. Anything else, such as a crash, is E8.
@@ -313,6 +321,38 @@ function startOver() {
   showState(startSection);
 }
 
+// Send the passcode to the server, which checks it and remembers this device (SPEC.md story 9).
+async function unlock(event) {
+  event.preventDefault(); // stay on this page instead of the browser's default form submission
+  const unlockProblem = document.getElementById("unlock-problem");
+  unlockProblem.hidden = true;
+
+  let response;
+  try {
+    response = await fetch("/unlock", { method: "POST", body: new FormData(event.target) });
+  } catch (error) {
+    unlockProblem.textContent = E2_NO_CONNECTION;
+    unlockProblem.hidden = false;
+    return;
+  }
+
+  if (response.ok) {
+    event.target.reset(); // don't leave the passcode sitting in the box
+    showState(startSection);
+    return;
+  }
+
+  let message = E8_UNEXPECTED;
+  try {
+    message = (await response.json()).error || message; // E11 for a wrong passcode
+  } catch (error) {
+    // The reply wasn't JSON, so keep the general message.
+  }
+  unlockProblem.textContent = message;
+  unlockProblem.hidden = false;
+}
+
+document.getElementById("unlock-form").addEventListener("submit", unlock);
 cameraInput.addEventListener("change", handlePhoto);
 libraryInput.addEventListener("change", handlePhoto);
 tryAgainButton.addEventListener("click", tryAgain);

@@ -13,9 +13,12 @@ from app import (
     E6_BAD_KEY,
     E7_PLANTNET_DOWN,
     E8_UNEXPECTED,
+    E11_WRONG_PASSCODE,
     MAX_PHOTO_BYTES,
     app,
 )
+
+TEST_PASSCODE = "correct horse battery staple"
 
 # The first bytes of each format are all the server looks at, so these short fakes are enough.
 JPEG_BYTES = b"\xff\xd8\xff\xe0" + b"\x00" * 100
@@ -55,16 +58,30 @@ class FakePlantNetResponse:
 
 
 @pytest.fixture
-def client(monkeypatch):
-    """A pretend browser that talks to the app without starting a real server.
+def locked_client(monkeypatch):
+    """A pretend browser that talks to the app without starting a real server, not yet unlocked.
 
     Pl@ntNet is replaced by a fake that always answers with the bouquet reply,
     and Wikipedia by a fake that always finds the marigold article.
+    Wrong passcodes don't really wait, so the tests stay fast; the waits are recorded instead.
     """
     monkeypatch.setenv("PLANTNET_API_KEY", "fake-key-for-tests")
+    monkeypatch.setenv("APP_PASSCODE", TEST_PASSCODE)
+    monkeypatch.setattr(app, "secret_key", "test-secret-key")
     monkeypatch.setattr("app.identify_with_plantnet", lambda photo_bytes: FakePlantNetResponse(200, BOUQUET_REPLY))
     monkeypatch.setattr("app.fetch_summary", lambda name: MARIGOLD_WIKIPEDIA)
-    return app.test_client()
+    waits = []
+    monkeypatch.setattr("app.time.sleep", waits.append)
+    test_client = app.test_client()
+    test_client.waits = waits
+    return test_client
+
+
+@pytest.fixture
+def client(locked_client):
+    """The same pretend browser, after entering the right passcode."""
+    locked_client.post("/unlock", data={"passcode": TEST_PASSCODE})
+    return locked_client
 
 
 def upload(client, data, filename="photo.jpg"):
@@ -83,6 +100,63 @@ def test_debug_mode_is_off_when_loaded_like_gunicorn_does():
 def test_info_log_lines_are_shown_even_without_debug_mode():
     # Online, the log is the only way to see what happened ("Received photo", the candidates...).
     assert app.logger.isEnabledFor(logging.INFO)
+
+
+# --- The passcode lock (SPEC.md story 9 and error E11) ---
+
+def test_locked_page_shows_only_the_passcode_box(locked_client):
+    page = locked_client.get("/").get_data(as_text=True)
+    assert '<section id="locked">' in page
+    assert '<section id="start" hidden>' in page
+
+
+def test_unlocked_page_starts_on_the_photo_buttons(client):
+    page = client.get("/").get_data(as_text=True)
+    assert '<section id="locked" hidden>' in page
+    assert '<section id="start">' in page
+
+
+def test_server_refuses_photos_without_the_passcode(locked_client, monkeypatch):
+    monkeypatch.setattr("app.identify_with_plantnet", lambda photo_bytes: pytest.fail("Pl@ntNet must not be called"))
+    response = upload(locked_client, JPEG_BYTES)
+    assert response.status_code == 401
+    assert response.get_json()["locked"] is True
+
+
+def test_wrong_passcode_is_refused_and_slowed_down(locked_client):
+    response = locked_client.post("/unlock", data={"passcode": "wrong guess"})
+    assert response.status_code == 401
+    assert response.get_json()["error"] == E11_WRONG_PASSCODE
+    assert locked_client.waits == [1]  # made to wait a second
+    assert upload(locked_client, JPEG_BYTES).status_code == 401  # still locked
+
+
+def test_right_passcode_unlocks_and_is_remembered_for_a_year(locked_client):
+    response = locked_client.post("/unlock", data={"passcode": TEST_PASSCODE})
+    assert response.get_json() == {"unlocked": True}
+    assert locked_client.waits == []  # no waiting for the right passcode
+    cookie = response.headers["Set-Cookie"]
+    assert "Expires=" in cookie  # kept after closing the browser, not just for this visit
+    assert "HttpOnly" in cookie  # the page's own JavaScript can't read or steal it
+    assert upload(locked_client, JPEG_BYTES).status_code == 200
+
+
+def test_no_passcode_set_up_means_nobody_gets_in(locked_client, monkeypatch):
+    # Fail closed: a missing APP_PASSCODE must never mean "no lock".
+    monkeypatch.delenv("APP_PASSCODE")
+    for attempt in ["", "anything"]:
+        assert locked_client.post("/unlock", data={"passcode": attempt}).status_code == 401
+
+
+def test_a_forged_cookie_is_not_accepted(locked_client):
+    # A cookie signed with a different secret key, as an attacker would have to make
+    forger = app.test_client()
+    real_key = app.secret_key
+    app.secret_key = "attackers-guess-at-the-key"
+    with forger.session_transaction() as fake_session:
+        fake_session["unlocked"] = True
+    app.secret_key = real_key
+    assert upload(forger, JPEG_BYTES).status_code == 401
 
 
 # --- The page ---

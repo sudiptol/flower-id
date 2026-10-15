@@ -51,6 +51,16 @@ button.button {
 /* My photos are close-ups with the flower in the middle, so show a centred square,
    zoomed in on the middle. The frame is the visible square; the photo is enlarged
    inside it and its edges are hidden. Also keeps the names and summary in view. */
+/* The passcode box: big and easy to type into on a phone */
+#passcode {
+  box-sizing: border-box;
+  width: 100%;
+  padding: 16px;
+  border: 2px solid #2e6b30;
+  border-radius: 12px;
+  font-size: 20px;
+}
+
 /* A quieter button for the second choice, so the main one (Try again) stands out */
 .button-secondary {
   background: #ffffff;

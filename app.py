@@ -1,9 +1,12 @@
+import hmac
 import logging
 import os
+import time
+from datetime import timedelta
 
 import requests
 from dotenv import load_dotenv
-from flask import Flask, jsonify, render_template, request
+from flask import Flask, jsonify, render_template, request, session
 
 from plantnet import identify_with_plantnet, summarise
 from wikipedia import fetch_summary
@@ -24,6 +27,10 @@ E5_DAILY_LIMIT = "Daily limit reached. Identification will work again tomorrow."
 E6_BAD_KEY = "Setup problem: the Pl@ntNet key isn't working. Check the .env file."
 E7_PLANTNET_DOWN = "Pl@ntNet isn't responding right now. Try again in a few minutes."
 E8_UNEXPECTED = "Something went wrong. Please try again."
+E11_WRONG_PASSCODE = "That passcode isn't right. Please try again."
+
+# How long a wrong passcode makes you wait, so guessing thousands of passcodes is impractical.
+WRONG_PASSCODE_DELAY_SECONDS = 1
 
 app = Flask(__name__)
 # Show our INFO lines ("Received photo", the Pl@ntNet candidates...) in the log online too.
@@ -31,6 +38,27 @@ app = Flask(__name__)
 app.logger.setLevel(logging.INFO)
 # Flask refuses anything bigger before our code even runs (error 413, handled below).
 app.config["MAX_CONTENT_LENGTH"] = MAX_PHOTO_BYTES
+
+# The passcode lock (SPEC.md story 9). After the right passcode, the browser keeps a cookie
+# that the server signs with SECRET_KEY, so it can't be forged. It lasts about a year.
+app.secret_key = os.environ.get("SECRET_KEY")
+app.config["PERMANENT_SESSION_LIFETIME"] = timedelta(days=365)
+# Online (Render sets RENDER=true), only send the cookie over https, never plain http.
+app.config["SESSION_COOKIE_SECURE"] = os.environ.get("RENDER") == "true"
+
+
+def passcode_is_right(attempt):
+    """Compare in constant time, so the time taken doesn't reveal how much of a guess was right."""
+    real_passcode = os.environ.get("APP_PASSCODE", "")
+    if not real_passcode:
+        # Fail closed: with no passcode set up, nobody gets in.
+        app.logger.error("APP_PASSCODE is missing. Is it in the .env file?")
+        return False
+    return hmac.compare_digest(attempt.encode(), real_passcode.encode())
+
+
+def is_unlocked():
+    return session.get("unlocked") is True
 
 
 def is_jpeg_or_png(data):
@@ -48,7 +76,20 @@ def is_heic(data):
 
 @app.route("/")
 def home():
-    return render_template("index.html")
+    # The page starts on the passcode box or on the photo buttons.
+    return render_template("index.html", unlocked=is_unlocked())
+
+
+@app.route("/unlock", methods=["POST"])
+def unlock():
+    if passcode_is_right(request.form.get("passcode", "")):
+        session["unlocked"] = True
+        session.permanent = True  # keep the cookie for PERMANENT_SESSION_LIFETIME, not just this visit
+        return jsonify(unlocked=True)
+
+    app.logger.warning("Wrong passcode entered")
+    time.sleep(WRONG_PASSCODE_DELAY_SECONDS)
+    return error_reply(E11_WRONG_PASSCODE, 401)
 
 
 def error_reply(message, status_code, can_retry=False):
@@ -62,6 +103,11 @@ def error_reply(message, status_code, can_retry=False):
 
 @app.route("/identify", methods=["POST"])
 def identify():
+    # Checked here on the server, not just in the page: anyone could skip the page
+    # and send photos straight here, using up my 500 identifications a day.
+    if not is_unlocked():
+        return jsonify(error="Please enter the passcode.", can_retry=False, locked=True), 401
+
     # The browser sends the photo as a form field named "photo".
     photo = request.files.get("photo")
     if photo is None:
