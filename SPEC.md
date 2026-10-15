@@ -247,7 +247,8 @@ What this version deliberately does **not** do. If a new idea comes up while bui
 
 ### Later ideas (maybe after step 8)
 
-- **Better accuracy (phase 2).** Real-world tests in step 4g gave low confidence. Ideas to try, measuring scores before and after each change on the same test photos:
+- **Better accuracy (phase 2).** Real-world tests in step 4g gave low confidence. A cut marigold head on a patterned cushion came back as *Anacyclus valentinus* ("Valentine's Sunflower") at 14–25%, with African marigold 2nd. Pl@ntNet's own website gave the **same wrong answer** (42%) for the same photo, so the cause is the photo and the model, not our app. Ideas to try, measuring scores before and after each change on the same test photos, and checking that the **right** answer gains, not just any answer:
+  - Photograph the flower on the plant, with leaves in the frame (marigold leaves are a key clue).
   - Tell Pl@ntNet the photo shows a flower (`organs=flower` instead of `auto`).
   - **Several photos per identification** (flower plus leaf, and so on). Pl@ntNet allows up to 5.
   - Let me crop to the flower before sending.
