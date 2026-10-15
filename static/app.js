@@ -197,18 +197,19 @@ async function sendPhoto(photo, attempt) {
   const formData = new FormData();
   formData.append("photo", photo, "photo.jpg");
 
+  // Cancels the request if it takes too long. To tell a timeout from a lost connection,
+  // ask this timer whether it ran out: browsers name the resulting error differently
+  // (Chrome says "TimeoutError", Safari didn't, and showed E2 instead of E3).
+  const deadline = AbortSignal.timeout(PAGE_TIMEOUT_MS);
+
   let response;
   try {
-    response = await fetch("/identify", {
-      method: "POST",
-      body: formData,
-      signal: AbortSignal.timeout(PAGE_TIMEOUT_MS), // cancels the request if it takes too long
-    });
+    response = await fetch("/identify", { method: "POST", body: formData, signal: deadline });
   } catch (error) {
     if (isOutdated(attempt)) {
       return;
     }
-    if (error.name === "TimeoutError") {
+    if (deadline.aborted) {
       showProblem(E3_TOO_SLOW, true);
     } else {
       // Otherwise fetch only fails like this when the server can't be reached at all.
@@ -250,7 +251,7 @@ async function sendPhoto(photo, attempt) {
       return;
     }
     // The deadline can also run out while the reply is still downloading.
-    showProblem(error.name === "TimeoutError" ? E3_TOO_SLOW : E8_UNEXPECTED, true);
+    showProblem(deadline.aborted ? E3_TOO_SLOW : E8_UNEXPECTED, true);
     return;
   }
   if (isOutdated(attempt)) {
