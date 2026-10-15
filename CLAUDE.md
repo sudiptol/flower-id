@@ -72,7 +72,7 @@ A personal learning project. It's a phone-friendly web page where I take or uplo
    - 6d. Ignore a late reply if I've already pressed Start over
    - 6e. Go through every error case in SPEC.md section 5 and its acceptance criteria; trigger each one for real where possible
    - 6f. A real test on mobile data (outside home Wi-Fi isn't possible until step 7, so simulate weak signal), then tag
-7. Put it online. Include an app icon (`apple-touch-icon.png`, `favicon.ico`): Safari asks for them, currently getting 404s.
+7. Put it online. Use a production server instead of Flask's built-in one (Flask warns: "This is a development server. Do not use it in a production deployment."), and turn `debug=True` off. Include an app icon (`apple-touch-icon.png`, `favicon.ico`): Safari asks for them, currently getting 404s.
 8. Review
 
 ## Current step
@@ -120,7 +120,7 @@ Setup done: Python 3.15.0 installed from python.org, with certificates set up.
 6b done: the page gives up after 35 s (`PAGE_TIMEOUT_MS`, via `AbortSignal.timeout`) and shows E3, including when the reply stalls mid-download. No signal still shows E2.
 6c done: every server error carries `can_retry` (via `error_reply()` in `app.py`); the page shows **Try again** only then (E2, E3, E7, E8) and re-sends the same shrunk photo. Page messages are named constants in `app.js`. 56 tests.
 6d done: numbered attempts (`startNewAttempt` / `isOutdated` in `app.js`); late replies and late failures are ignored after Start over; Start over during shrinking means no upload. Race tests in the browser, plus a deliberate-bug check.
-Next: 6e, go through every error case in SPEC.md section 5.
+6e in progress: all 12 spec messages match the code word for word; E1, E4, E6 (wrong key on a second server, key absent from log), E9, E10 triggered for real from the Mac. Waiting for the phone checklist (E2 + Try again, E4).
 
 ## Environment notes
 
