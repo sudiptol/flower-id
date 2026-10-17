@@ -7,7 +7,8 @@ import requests
 WIKIPEDIA_API_URL = "https://en.wikipedia.org/w/api.php"
 
 # Wikipedia refuses requests that don't say who is asking (403 Forbidden).
-USER_AGENT = "flower-id-learning-project/0.1 (personal learning app)"
+# Its rules also ask for a way to contact the owner, so the project's address is included.
+USER_AGENT = "flower-id/1.0 (https://github.com/sudiptol/flower-id; personal learning project)"
 
 # Give up after 5 seconds: the Pl@ntNet result is shown anyway (W2 in SPEC.md).
 TIMEOUT_SECONDS = 5

@@ -142,7 +142,10 @@ Setup done: Python 3.15.0 installed from python.org, with certificates set up.
 7g done: a real walk on mobile data, identifications worked. Once the home-screen app showed a blank white screen after closing Safari; closing it fully (swipe away) and reopening fixed it. Not yet shared with anyone (story 9 "Only me" still true; sharing would mean updating the spec).
 **Step 7 complete** (git tag `step-7`).
 After step 7: removed the red unsure warning and moved the Pl@ntNet confidence line to just under the photo (spec stories 4 and 6 and sketches C/D updated; checked in the browser with pretend results).
-Next: step 8, review.
+8a done: 35 of 36 spec boxes ticked; open: "Take a photo" on the Mac (my check). One outdated spec sentence fixed.
+8b done: whole code read. Findings: outdated "warning" comments; E1/E9/E10 written inline; missing `SECRET_KEY` crashed `/unlock` (500, no clear log); Wikipedia User-Agent had no contact; passcode strength (about 1 guess/second; I chose to keep my passcode).
+8c done: fixed the first four (all messages are named constants now; missing `SECRET_KEY` logs a clear error and shows E8; User-Agent includes the GitHub address, checked against real Wikipedia). 71 tests.
+Next: 8d, retrospective.
 
 ## Environment notes
 

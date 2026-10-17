@@ -10,7 +10,7 @@ PLANTNET_URL = "https://my-api.plantnet.org/v2/identify/all"
 # Give up after 20 seconds instead of waiting forever (error E3 in SPEC.md).
 TIMEOUT_SECONDS = 20
 
-# Below this confidence, the page shows a warning and the top 3 candidates (SPEC.md story 6).
+# Below this confidence, the page says "Best guess:" and shows the top 3 candidates (SPEC.md story 6).
 CONFIDENT_PERCENT = 50
 
 
@@ -36,7 +36,7 @@ def identify_with_plantnet(photo_bytes):
 def to_percent(score):
     """Turn Pl@ntNet's score (0 to 1) into a whole percentage: 0.92613 -> 92.
 
-    Always rounds down, so 0.497 shows as 49% and gets the warning, never as a
+    Always rounds down, so 0.497 shows as 49% and is treated as unsure, never as a
     confident-looking 50%. (Rounding to 2 decimals first removes tiny computer
     maths errors, like 0.29 * 100 = 28.999999999999996.)
     """

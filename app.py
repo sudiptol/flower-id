@@ -23,12 +23,15 @@ MAX_PHOTO_BYTES = 10 * 1024 * 1024
 HEIC_BRANDS = [b"heic", b"heix", b"mif1"]
 
 # Messages from SPEC.md section 5, by error number.
+E1_NOT_A_PHOTO = "That file isn't a photo. Please choose a JPG or PNG image."
 E3_TOO_SLOW = "Identification is taking too long. Please try again."
 E4_NO_FLOWER = "No flower recognised. Try a closer, sharper photo with the flower filling the frame."
 E5_DAILY_LIMIT = "Daily limit reached. Identification will work again tomorrow."
 E6_BAD_KEY = "Setup problem: the Pl@ntNet key isn't working. Check the .env file."
 E7_PLANTNET_DOWN = "Pl@ntNet isn't responding right now. Try again in a few minutes."
 E8_UNEXPECTED = "Something went wrong. Please try again."
+E9_TOO_LARGE = "That photo is too large (over 10 MB). Please choose a smaller one."
+E10_HEIC = "HEIC photos can't be identified yet. Please use a JPG or PNG."
 E11_WRONG_PASSCODE = "That passcode isn't right. Please try again."
 
 # How long a wrong passcode makes you wait, so guessing thousands of passcodes is impractical.
@@ -97,6 +100,11 @@ def browser_tab_icon():
 
 @app.route("/unlock", methods=["POST"])
 def unlock():
+    if not app.secret_key:
+        # Fail closed, but clearly: without it the "remembered" cookie can't be signed.
+        app.logger.error("SECRET_KEY is missing. Is it in the .env file?")
+        return error_reply(E8_UNEXPECTED, 500)
+
     if passcode_is_right(request.form.get("passcode", "")):
         session["unlocked"] = True
         session.permanent = True  # keep the cookie for PERMANENT_SESSION_LIFETIME, not just this visit
@@ -132,12 +140,11 @@ def identify():
     app.logger.info("Received photo: %d KB", len(photo_bytes) // 1024)
 
     if is_heic(photo_bytes):
-        # Error E10: Pl@ntNet only accepts JPEG and PNG. The page converts photos when it can.
-        return error_reply("HEIC photos can't be identified yet. Please use a JPG or PNG.", 400)
+        # Pl@ntNet only accepts JPEG and PNG. The page converts photos when it can.
+        return error_reply(E10_HEIC, 400)
 
     if not is_jpeg_or_png(photo_bytes):
-        # Error E1 from SPEC.md section 5.
-        return error_reply("That file isn't a photo. Please choose a JPG or PNG image.", 400)
+        return error_reply(E1_NOT_A_PHOTO, 400)
 
     if not os.environ.get("PLANTNET_API_KEY"):
         app.logger.error("PLANTNET_API_KEY is missing. Is it in the .env file?")
@@ -198,8 +205,7 @@ def plantnet_error(response):
 
 @app.errorhandler(413)
 def photo_too_large(error):
-    # Error E9 from SPEC.md section 5.
-    return error_reply("That photo is too large (over 10 MB). Please choose a smaller one.", 413)
+    return error_reply(E9_TOO_LARGE, 413)
 
 
 # This only runs when I start the app on my Mac with "python app.py".

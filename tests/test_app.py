@@ -154,6 +154,15 @@ def test_no_passcode_set_up_means_nobody_gets_in(locked_client, monkeypatch):
         assert locked_client.post("/unlock", data={"passcode": attempt}).status_code == 401
 
 
+def test_no_secret_key_set_up_fails_clearly(locked_client, monkeypatch, caplog):
+    # Without SECRET_KEY the cookie can't be signed. Nobody gets in, and the log says why.
+    monkeypatch.setattr(app, "secret_key", None)
+    response = locked_client.post("/unlock", data={"passcode": TEST_PASSCODE})
+    assert response.status_code == 500
+    assert response.get_json()["error"] == E8_UNEXPECTED  # a friendly message, not a crash page
+    assert "SECRET_KEY is missing" in caplog.text
+
+
 def test_a_forged_cookie_is_not_accepted(locked_client):
     # A cookie signed with a different secret key, as an attacker would have to make
     forger = app.test_client()

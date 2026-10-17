@@ -37,7 +37,7 @@ def test_50_percent_is_confident():
 
 
 def test_just_under_50_percent_is_not_confident():
-    # Would show as "49%", so it must get the warning.
+    # Would show as "49%", so it must be treated as unsure.
     assert summarise(make_reply((0.4999, "Bellis perennis", ["Common daisy"])))["confident"] is False
 
 
