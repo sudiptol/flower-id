@@ -136,6 +136,8 @@ Setup done: Python 3.15.0 installed from python.org, with certificates set up.
 7c done: `APP_PASSCODE` and one `SECRET_KEY` in `.env` (an earlier mistake had added four `SECRET_KEY` lines and no passcode). Phone check: locked at first, wrong passcode refused (log says so without the passcode), right one accepted, remembered in a new tab, identification normal.
 7d done: icon drawn in `static/icon.svg` (green flower on light green, my choice of two options); `scripts/make_icons.py` builds `apple-touch-icon.png` (180 px) and `favicon.ico` (32 px) with the Mac's `sips`, no installs. The built files are committed, because Render (Linux) has no `sips`. Served at the root addresses with no passcode needed; 68 tests. Phone: added to the home screen, icon correct. Safari still asks for `apple-touch-icon-precomposed.png` first (404, harmless).
 7e in progress: history scan clean (the three real secrets found 0 times in all 63 commits, files and messages; scanner proven with a known text; no photos ever committed). Repository on GitHub is **public**: every push is visible to anyone, so secrets stay only in `.env` / Render settings.
+7e done: pushed to https://github.com/sudiptol/flower-id (`main` + 7 tags; checked from outside: same commit, 22 files, no `.env` or photos). Push uses a fine-grained token (only this repository, Contents read/write, 90 days, expires about 2027-01-15) saved in the Mac Keychain.
+Next: 7f, the Render service.
 
 ## Environment notes
 
@@ -152,6 +154,7 @@ Setup done: Python 3.15.0 installed from python.org, with certificates set up.
 - **Testing on the phone (Safari):** after code changes, close the tab and open a fresh one. A plain refresh can keep the old page and make a working change look broken.
 - The app runs on port **5001**, not Flask's usual 5000, because macOS's AirPlay Receiver uses 5000.
 - Homebrew is installed but too old to run on this macOS version, so don't rely on it.
+- **Pushing to GitHub:** `git push` (HTTPS, no `gh` tool). The Password prompt wants the **token** (`github_pat_…`), never the GitHub password; a Mac pop-up wants the **Mac** password (Keychain). If a push fails with "Invalid username or token" without asking, an old Keychain entry was used: run the push again so git asks afresh.
 
 ## Pl@ntNet API facts (read from their docs on 2026-10-14)
 
