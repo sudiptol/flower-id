@@ -72,13 +72,13 @@ A personal learning project. It's a phone-friendly web page where I take or uplo
    - 6d. Ignore a late reply if I've already pressed Start over
    - 6e. Go through every error case in SPEC.md section 5 and its acceptance criteria; trigger each one for real where possible
    - 6f. A real test on mobile data (outside home Wi-Fi isn't possible until step 7, so simulate weak signal), then tag
-7. Put it online on **Render's free tier** (decided 2026-10-15; deploys from a private GitHub repository). Small steps:
+7. Put it online on **PythonAnywhere's free plan** (decided 2026-10-17, replacing Render, whose free tier asked for a card; code comes from the public GitHub repository). Small steps:
    - 7a. Spec: story 9 "Only me" (remembered passcode), E11, Render notes
    - 7b. Production settings: `debug` off unless running locally; gunicorn instead of Flask's development server (ask before installing)
    - 7c. The passcode lock: checked on the server; remembered with a signed cookie; wrong tries slowed down. `APP_PASSCODE` and `SECRET_KEY` in `.env` / Render settings
    - 7d. App icon (`apple-touch-icon.png`, `favicon.ico`): Safari asks for them, currently getting 404s
    - 7e. **Public** GitHub repository (my choice, 2026-10-17; commits keep my Gmail address), after scanning the whole git history for secrets
-   - 7f. Render service; I type the secrets into Render's settings myself
+   - 7f. PythonAnywhere: make the code host-independent (secure cookie unless run with `python app.py`; gunicorn removed), then account, clone from GitHub, virtualenv, web app + WSGI file, `.env` typed by me in their editor, Force HTTPS, run the tests on their Python
    - 7g. A real walk on mobile data, then tag `step-7`
 8. Review
 
@@ -137,7 +137,7 @@ Setup done: Python 3.15.0 installed from python.org, with certificates set up.
 7d done: icon drawn in `static/icon.svg` (green flower on light green, my choice of two options); `scripts/make_icons.py` builds `apple-touch-icon.png` (180 px) and `favicon.ico` (32 px) with the Mac's `sips`, no installs. The built files are committed, because Render (Linux) has no `sips`. Served at the root addresses with no passcode needed; 68 tests. Phone: added to the home screen, icon correct. Safari still asks for `apple-touch-icon-precomposed.png` first (404, harmless).
 7e in progress: history scan clean (the three real secrets found 0 times in all 63 commits, files and messages; scanner proven with a known text; no photos ever committed). Repository on GitHub is **public**: every push is visible to anyone, so secrets stay only in `.env` / Render settings.
 7e done: pushed to https://github.com/sudiptol/flower-id (`main` + 7 tags; checked from outside: same commit, 22 files, no `.env` or photos). Push uses a fine-grained token (only this repository, Contents read/write, 90 days, expires about 2027-01-15) saved in the Mac Keychain.
-Next: 7f, the Render service.
+7f switched host: Render wanted a card, so **PythonAnywhere** instead (spec updated). Code made host-independent: the cookie is https-only by default and only relaxed under `python app.py`; `.env` loaded by exact path; gunicorn, `gunicorn.conf.py` and `.python-version` removed (7b's gunicorn work no longer applies). 69 tests.
 
 ## Environment notes
 

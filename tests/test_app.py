@@ -91,10 +91,16 @@ def upload(client, data, filename="photo.jpg"):
 
 # --- Safe to put online ---
 
-def test_debug_mode_is_off_when_loaded_like_gunicorn_does():
-    # Gunicorn imports the app, just as this test file does. Debug mode online would
-    # show code details to anyone, so it must only ever be on with "python app.py".
+def test_debug_mode_is_off_when_loaded_like_a_web_server_does():
+    # The web server online imports the app, just as this test file does. Debug mode online
+    # would show code details to anyone, so it must only ever be on with "python app.py".
     assert app.debug is False
+
+
+def test_passcode_cookie_is_https_only_when_loaded_like_a_web_server_does(locked_client):
+    # Online, the "unlocked" cookie must never travel over plain http, where others could copy it.
+    response = locked_client.post("/unlock", data={"passcode": TEST_PASSCODE})
+    assert "Secure" in response.headers["Set-Cookie"]
 
 
 def test_info_log_lines_are_shown_even_without_debug_mode():

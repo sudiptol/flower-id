@@ -3,6 +3,7 @@ import logging
 import os
 import time
 from datetime import timedelta
+from pathlib import Path
 
 import requests
 from dotenv import load_dotenv
@@ -11,8 +12,9 @@ from flask import Flask, jsonify, render_template, request, send_from_directory,
 from plantnet import identify_with_plantnet, summarise
 from wikipedia import fetch_summary
 
-# Read secrets such as PLANTNET_API_KEY from the .env file (never saved in git).
-load_dotenv()
+# Read secrets such as PLANTNET_API_KEY from the .env file next to this one (never saved in git).
+# The exact path matters online, where the web server starts in a different folder.
+load_dotenv(Path(__file__).parent / ".env")
 
 # Largest photo the server accepts (10 MB). The same limit is in static/app.js.
 MAX_PHOTO_BYTES = 10 * 1024 * 1024
@@ -43,8 +45,9 @@ app.config["MAX_CONTENT_LENGTH"] = MAX_PHOTO_BYTES
 # that the server signs with SECRET_KEY, so it can't be forged. It lasts about a year.
 app.secret_key = os.environ.get("SECRET_KEY")
 app.config["PERMANENT_SESSION_LIFETIME"] = timedelta(days=365)
-# Online (Render sets RENDER=true), only send the cookie over https, never plain http.
-app.config["SESSION_COOKIE_SECURE"] = os.environ.get("RENDER") == "true"
+# Only send the cookie over https, never plain http. Safe by default on any host;
+# "python app.py" on the Mac turns this off at the bottom, because home Wi-Fi uses plain http.
+app.config["SESSION_COOKIE_SECURE"] = True
 
 
 def passcode_is_right(attempt):
@@ -200,8 +203,10 @@ def photo_too_large(error):
 
 
 # This only runs when I start the app on my Mac with "python app.py".
-# Online, gunicorn loads the app without running this, so debug mode is never on there.
+# Online, the web server loads the app without running this, so debug mode is never on there.
 if __name__ == "__main__":
+    # The phone reaches the Mac over plain http, so the cookie can't be https-only here.
+    app.config["SESSION_COOKIE_SECURE"] = False
     # host="0.0.0.0" lets other devices on my home Wi-Fi (my phone) reach the app.
     # Only run it like this on a network I trust.
     app.run(debug=True, host="0.0.0.0", port=5001)

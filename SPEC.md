@@ -202,7 +202,7 @@ Pass/fail checks for each user story. A story is **done** only when every box ca
 - [ ] Without the passcode, the app shows only a passcode box. The server itself refuses identifications without it (not just the page), so nobody can get round it by calling the server directly.
 - [ ] After entering the right passcode once, that device goes straight to the app for about a year.
 - [ ] A wrong passcode shows E11, and each wrong try is slowed down by a second or so, to make guessing impractical.
-- [ ] The passcode lives in `.env` on the Mac and in Render's settings online, never in the code, git or chat (like the Pl@ntNet key).
+- [ ] The passcode lives in `.env` on the Mac and in a separate `.env` on PythonAnywhere, never in the code, git or chat (like the Pl@ntNet key).
 
 **Overall**
 - [x] On home Wi-Fi, a result appears within 10 seconds of choosing a photo. *(Seen throughout testing; on a simulated weak signal of 40 KB/s, about 15 seconds.)*
@@ -285,5 +285,8 @@ What this version deliberately does **not** do. If a new idea comes up while bui
 This is a **web app**, not a native iPhone app: no Xcode, no App Store. I open it in my phone's web browser.
 
 - **While building (steps 2–6):** the app runs on my Mac. My phone opens it by typing the Mac's local address (like `http://192.168.1.20:5001`) into the browser. This only works at home, with both devices on the same Wi-Fi.
-- **Once online (step 7):** the app lives on **Render's free tier** with a normal `https://` web address, so it works anywhere, including on walks. It sleeps after 15 minutes unused and takes about a minute to wake, so **open it before taking photos**.
+- **Once online (step 7):** the app lives on **PythonAnywhere's free plan** at `https://sudiptol.pythonanywhere.com`, so it works anywhere, including on walks. It's always on (no waiting for it to wake). *(Changed from Render on 2026-10-17: Render's free tier asked for a card; PythonAnywhere's doesn't.)* Its catches:
+  - The free plan only lets the app contact sites on PythonAnywhere's allowlist. Pl@ntNet (`my-api.plantnet.org`) and Wikipedia are on it (checked 2026-10-17).
+  - I must click **"Run until 3 months from today"** on the Web tab every 3 months, or the app stops. PythonAnywhere emails a reminder.
+  - Updating the live app is by hand: `git pull` in a PythonAnywhere console, then **Reload** on the Web tab.
 - **App-like feel:** in the phone browser, "Add to Home Screen" gives it an icon like a real app.
