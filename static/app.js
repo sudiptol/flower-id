@@ -138,9 +138,8 @@ function showResult(result) {
 
   document.getElementById("confidence").textContent = formatConfidence(best.confidence);
 
-  // State D extras: the warning, the "Best guess" label and the other candidates.
+  // State D extras: the "Best guess" label and the other candidates.
   const unsure = !result.confident;
-  document.getElementById("unsure-warning").hidden = !unsure;
   document.getElementById("best-guess-label").hidden = !unsure;
 
   const others = result.candidates.slice(1);

@@ -173,7 +173,11 @@ def test_home_page_loads(client):
     assert "Take a photo" in response.get_data(as_text=True)
 
 
-# --- App icons (step 7d) ---
+def test_result_shows_the_plantnet_line_above_the_name_and_no_red_warning(client):
+    # Changed on 2026-10-17 (SPEC.md stories 4 and 6): the confidence line sits where the red box was.
+    page = client.get("/").get_data(as_text=True)
+    assert page.index("Identified by Pl@ntNet") < page.index('id="best-guess-label"') < page.index('id="main-name"')
+    assert "Not sure about this one" not in page
 
 def test_home_screen_icon_is_a_png_even_when_locked(locked_client):
     # Safari asks for the icons before anyone has typed the passcode.

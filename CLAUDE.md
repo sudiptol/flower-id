@@ -11,7 +11,7 @@ A personal learning project. It's a phone-friendly web page where I take or uplo
 - **Two sources, always shown separately:**
   - "Identified by Pl@ntNet (confidence X%)"
   - "Reference: Wikipedia [link]"
-- **Low confidence (below 50%):** show the best guess with a visible warning, plus the top 3 candidates.
+- **Low confidence (below 50%):** show the name labelled "Best guess:", plus the top 3 candidates. The "Identified by Pl@ntNet (confidence X%)" line sits straight under the photo on every result. (The red "Not sure about this one" box was removed on 2026-10-17, my choice.)
 - **Secrets:** API keys go in a `.env` file. Never put them in code and never paste them in chat. `.env` must be listed in `.gitignore`.
 
 ## About me / how to work with me
@@ -141,6 +141,7 @@ Setup done: Python 3.15.0 installed from python.org, with certificates set up.
 7f done: live at **https://sudiptol.pythonanywhere.com** (Python 3.13.1, virtualenv `flower-id`, WSGI file points at `/home/sudiptol/flower-id`, Force HTTPS on). 69 tests pass on PythonAnywhere too. Its `.env` has its own `SECRET_KEY` (made straight into the file, never shown). Checked from the Mac: http→https, icons, 401 without passcode, wrong passcode slowed, debug off. Phone on mobile data: identification works; home-screen icon re-added for the new address. Story 9 boxes ticked in `SPEC.md`.
 7g done: a real walk on mobile data, identifications worked. Once the home-screen app showed a blank white screen after closing Safari; closing it fully (swipe away) and reopening fixed it. Not yet shared with anyone (story 9 "Only me" still true; sharing would mean updating the spec).
 **Step 7 complete** (git tag `step-7`).
+After step 7: removed the red unsure warning and moved the Pl@ntNet confidence line to just under the photo (spec stories 4 and 6 and sketches C/D updated; checked in the browser with pretend results).
 Next: step 8, review.
 
 ## Environment notes
