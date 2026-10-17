@@ -132,7 +132,9 @@ Setup done: Python 3.15.0 installed from python.org, with certificates set up.
 **Step 6 complete** (git tag `step-6`).
 7a done: host = Render, lock = remembered passcode; spec story 9 and E11 approved.
 7b done: gunicorn 26.2.0 (`gunicorn.conf.py`: bind 0.0.0.0:$PORT, 2 workers, timeout 40 s); `.python-version` = 3.15; debug is only on with `python app.py`; INFO logs enabled so they show under gunicorn too. Rehearsed locally: `.venv/bin/gunicorn app:app` serves on port 8000.
-7c built: `/unlock` checks `APP_PASSCODE` (constant-time compare, 1 s wait on a wrong try, fails closed if unset); a signed session cookie (`SECRET_KEY`) lasts 365 days, HttpOnly, and Secure on Render (`RENDER=true`); `/identify` refuses without it (401, `locked`). Page: passcode box first when locked; a 401 later goes back to it. 65 tests. Waiting for me to add `APP_PASSCODE` and `SECRET_KEY` to `.env` and try it on the phone.
+7c built: `/unlock` checks `APP_PASSCODE` (constant-time compare, 1 s wait on a wrong try, fails closed if unset); a signed session cookie (`SECRET_KEY`) lasts 365 days, HttpOnly, and Secure on Render (`RENDER=true`); `/identify` refuses without it (401, `locked`). Page: passcode box first when locked; a 401 later goes back to it. 65 tests.
+7c done: `APP_PASSCODE` and one `SECRET_KEY` in `.env` (an earlier mistake had added four `SECRET_KEY` lines and no passcode). Phone check: locked at first, wrong passcode refused (log says so without the passcode), right one accepted, remembered in a new tab, identification normal.
+Next: 7d, app icon.
 
 ## Environment notes
 
@@ -143,7 +145,8 @@ Setup done: Python 3.15.0 installed from python.org, with certificates set up.
 - Browsers differ: always confirm page behaviour on my real iPhone (Safari), not only in Chrome. Prefer checking our own state (e.g. `deadline.aborted`) over interpreting browser error names.
 - **Run the tests before every commit:** `python -m pytest` (with `.venv` active). Add tests for each new behaviour, including failures.
 - Project packages live in `.venv`. Turn it on with `source .venv/bin/activate` (prompt shows `(.venv)`), off with `deactivate`.
-- Find the Mac's Wi-Fi address with `ipconfig getifaddr en0` (it was 192.168.86.23 on 2026-10-14; it can change). The phone opens `http://<that address>:5001`.
+- Find the Mac's Wi-Fi address with `ipconfig getifaddr en0` (it was 192.168.86.23 on 2026-10-14; it can change). The phone opens `http://<that address>:5001`. **The phone must be on the same home Wi-Fi**, not mobile data: if Safari can't open the page and the server log shows no request from the phone, check that first.
+- The server reads `.env` only when it starts: restart it after editing `.env`.
 - **Testing on the phone (Safari):** after code changes, close the tab and open a fresh one. A plain refresh can keep the old page and make a working change look broken.
 - The app runs on port **5001**, not Flask's usual 5000, because macOS's AirPlay Receiver uses 5000.
 - Homebrew is installed but too old to run on this macOS version, so don't rely on it.
