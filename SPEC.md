@@ -199,10 +199,10 @@ Pass/fail checks for each user story. A story is **done** only when every box ca
 - [x] **Identify another flower** returns to the Start state (A) in one tap, without reloading the page.
 
 **9. Only me** *(step 7)*
-- [ ] Without the passcode, the app shows only a passcode box. The server itself refuses identifications without it (not just the page), so nobody can get round it by calling the server directly.
-- [ ] After entering the right passcode once, that device goes straight to the app for about a year.
-- [ ] A wrong passcode shows E11, and each wrong try is slowed down by a second or so, to make guessing impractical.
-- [ ] The passcode lives in `.env` on the Mac and in a separate `.env` on PythonAnywhere, never in the code, git or chat (like the Pl@ntNet key).
+- [x] Without the passcode, the app shows only a passcode box. The server itself refuses identifications without it (not just the page), so nobody can get round it by calling the server directly. *(Checked online 2026-10-17: `/identify` answers 401 without the cookie.)*
+- [x] After entering the right passcode once, that device goes straight to the app for about a year. *(Phone: Safari and the home-screen icon both go straight in.)*
+- [x] A wrong passcode shows E11, and each wrong try is slowed down by a second or so, to make guessing impractical. *(Online: 401 after about 1.8 s, no cookie given.)*
+- [x] The passcode lives in `.env` on the Mac and in a separate `.env` on PythonAnywhere, never in the code, git or chat (like the Pl@ntNet key).
 
 **Overall**
 - [x] On home Wi-Fi, a result appears within 10 seconds of choosing a photo. *(Seen throughout testing; on a simulated weak signal of 40 KB/s, about 15 seconds.)*

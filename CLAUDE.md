@@ -138,6 +138,8 @@ Setup done: Python 3.15.0 installed from python.org, with certificates set up.
 7e in progress: history scan clean (the three real secrets found 0 times in all 63 commits, files and messages; scanner proven with a known text; no photos ever committed). Repository on GitHub is **public**: every push is visible to anyone, so secrets stay only in `.env` / Render settings.
 7e done: pushed to https://github.com/sudiptol/flower-id (`main` + 7 tags; checked from outside: same commit, 22 files, no `.env` or photos). Push uses a fine-grained token (only this repository, Contents read/write, 90 days, expires about 2027-01-15) saved in the Mac Keychain.
 7f switched host: Render wanted a card, so **PythonAnywhere** instead (spec updated). Code made host-independent: the cookie is https-only by default and only relaxed under `python app.py`; `.env` loaded by exact path; gunicorn, `gunicorn.conf.py` and `.python-version` removed (7b's gunicorn work no longer applies). 69 tests.
+7f done: live at **https://sudiptol.pythonanywhere.com** (Python 3.13.1, virtualenv `flower-id`, WSGI file points at `/home/sudiptol/flower-id`, Force HTTPS on). 69 tests pass on PythonAnywhere too. Its `.env` has its own `SECRET_KEY` (made straight into the file, never shown). Checked from the Mac: http→https, icons, 401 without passcode, wrong passcode slowed, debug off. Phone on mobile data: identification works; home-screen icon re-added for the new address. Story 9 boxes ticked in `SPEC.md`.
+Next: 7g, a real walk on mobile data, then tag `step-7`.
 
 ## Environment notes
 
@@ -154,6 +156,9 @@ Setup done: Python 3.15.0 installed from python.org, with certificates set up.
 - **Testing on the phone (Safari):** after code changes, close the tab and open a fresh one. A plain refresh can keep the old page and make a working change look broken.
 - The app runs on port **5001**, not Flask's usual 5000, because macOS's AirPlay Receiver uses 5000.
 - Homebrew is installed but too old to run on this macOS version, so don't rely on it.
+- **Updating the live app (PythonAnywhere):** after pushing from the Mac, in a PythonAnywhere Bash console: `workon flower-id`, `cd ~/flower-id`, `git pull` (plus `pip install -r requirements.txt` if packages changed, and `python -m pytest -q`), then **Reload** on the Web tab. Problems: the Web tab's **error log**.
+- **Every 3 months** click "Run until 3 months from today" on PythonAnywhere's Web tab (first due about 2027-01-17), or the app stops. Its free plan can only reach allowlisted sites (Pl@ntNet and Wikipedia are on it).
+- Commands are labelled **(Mac)** or **(PythonAnywhere)**: the PythonAnywhere prompt looks like `(flower-id) 06:55 ~/flower-id (main)$`.
 - **Pushing to GitHub:** `git push` (HTTPS, no `gh` tool). The Password prompt wants the **token** (`github_pat_…`), never the GitHub password; a Mac pop-up wants the **Mac** password (Keychain). If a push fails with "Invalid username or token" without asking, an old Keychain entry was used: run the push again so git asks afresh.
 
 ## Pl@ntNet API facts (read from their docs on 2026-10-14)
