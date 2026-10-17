@@ -6,7 +6,7 @@ from datetime import timedelta
 
 import requests
 from dotenv import load_dotenv
-from flask import Flask, jsonify, render_template, request, session
+from flask import Flask, jsonify, render_template, request, send_from_directory, session
 
 from plantnet import identify_with_plantnet, summarise
 from wikipedia import fetch_summary
@@ -78,6 +78,18 @@ def is_heic(data):
 def home():
     # The page starts on the passcode box or on the photo buttons.
     return render_template("index.html", unlocked=is_unlocked())
+
+
+# The app icons (made by scripts/make_icons.py). Browsers ask for them at these exact addresses,
+# not under /static/. No passcode needed: they're the same for everyone and show nothing private.
+@app.route("/apple-touch-icon.png")
+def home_screen_icon():
+    return send_from_directory(app.static_folder, "apple-touch-icon.png")
+
+
+@app.route("/favicon.ico")
+def browser_tab_icon():
+    return send_from_directory(app.static_folder, "favicon.ico")
 
 
 @app.route("/unlock", methods=["POST"])

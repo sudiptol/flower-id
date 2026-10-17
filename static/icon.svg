@@ -1,0 +1,16 @@
+<!-- The app icon's source drawing. After changing it, rebuild the PNG and ICO files
+     with: python scripts/make_icons.py -->
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 180 180" width="180" height="180">
+  <!-- Light green background. No transparency: iPhones fill see-through areas with black. -->
+  <rect width="180" height="180" fill="#eef6ee"/>
+  <!-- Five petals: the same petal turned 72 degrees each time (360 / 5) -->
+  <g fill="#2e6b30">
+    <ellipse cx="90" cy="52" rx="22" ry="34" transform="rotate(0 90 90)"/>
+    <ellipse cx="90" cy="52" rx="22" ry="34" transform="rotate(72 90 90)"/>
+    <ellipse cx="90" cy="52" rx="22" ry="34" transform="rotate(144 90 90)"/>
+    <ellipse cx="90" cy="52" rx="22" ry="34" transform="rotate(216 90 90)"/>
+    <ellipse cx="90" cy="52" rx="22" ry="34" transform="rotate(288 90 90)"/>
+  </g>
+  <!-- Yellow centre -->
+  <circle cx="90" cy="90" r="20" fill="#f6c94c"/>
+</svg>

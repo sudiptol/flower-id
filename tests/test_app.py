@@ -167,6 +167,28 @@ def test_home_page_loads(client):
     assert "Take a photo" in response.get_data(as_text=True)
 
 
+# --- App icons (step 7d) ---
+
+def test_home_screen_icon_is_a_png_even_when_locked(locked_client):
+    # Safari asks for the icons before anyone has typed the passcode.
+    response = locked_client.get("/apple-touch-icon.png")
+    assert response.status_code == 200
+    assert response.mimetype == "image/png"
+    assert response.data.startswith(b"\x89PNG\r\n\x1a\n")
+
+
+def test_browser_tab_icon_is_an_ico_even_when_locked(locked_client):
+    response = locked_client.get("/favicon.ico")
+    assert response.status_code == 200
+    assert response.data.startswith(b"\x00\x00\x01\x00")  # every .ico file starts like this
+
+
+def test_page_links_to_both_icons(locked_client):
+    page = locked_client.get("/").get_data(as_text=True)
+    assert '<link rel="icon" href="/favicon.ico">' in page
+    assert '<link rel="apple-touch-icon" href="/apple-touch-icon.png">' in page
+
+
 # --- Real images are accepted and identified ---
 
 def test_accepts_jpeg(client):
