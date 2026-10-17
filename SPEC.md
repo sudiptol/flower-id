@@ -155,7 +155,7 @@ Pass/fail checks for each user story. A story is **done** only when every box ca
 **1. Take a photo**
 - [x] On my phone, tapping **Take a photo** opens the camera directly.
 - [x] After I take the photo, the app moves to the Working state (B) without any extra taps.
-- [ ] On my Mac (no camera prompt), **Take a photo** simply opens the file picker, like **Choose a photo**.
+- [x] On my Mac (no camera prompt), **Take a photo** simply opens the file picker, like **Choose a photo**. *(Checked in Safari on 2026-10-17: it opens the Finder file window.)*
 
 **2. Choose a saved photo**
 - [x] On my phone, tapping **Choose a photo** opens my photo library.
