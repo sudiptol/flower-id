@@ -251,7 +251,7 @@ If Pl@ntNet worked but Wikipedia didn't, the identification is still useful, so 
 
 What this version deliberately does **not** do. If a new idea comes up while building, it goes on the "Later ideas" list instead of into the current step.
 
-### Later ideas (maybe after step 8)
+### Later ideas (phase 2, after version 1.0)
 
 - **Better accuracy (phase 2).** Real-world tests in step 4g gave low confidence. A cut marigold head on a patterned cushion came back as *Anacyclus valentinus* ("Valentine's Sunflower") at 14–25%, with African marigold 2nd. Pl@ntNet's own website gave the **same wrong answer** (42%) for the same photo, so the cause is the photo and the model, not our app. Ideas to try, measuring scores before and after each change on the same test photos, and checking that the **right** answer gains, not just any answer:
   - Photograph the flower on the plant, with leaves in the frame (marigold leaves are a key clue).
@@ -267,6 +267,10 @@ What this version deliberately does **not** do. If a new idea comes up while bui
 - **Share** a result with someone.
 - **Other languages** for names and summaries.
 - **A native iPhone app** built in Xcode.
+- *(Added in step 8)* **Let a friend use it.** Today one shared passcode can't be taken back from one person without logging everyone out (changing `SECRET_KEY`). Friends would need their own passcodes, and a check of Pl@ntNet's terms for sharing one free key. Story 9 ("Only me") would change.
+- *(Added in step 8)* **Stronger protection against passcode guessing:** for example, pause the lock after several wrong tries. Each wrong guess currently waits 1 second, which also briefly stalls the app for me.
+- *(Added in step 8)* **Automated tests for the page itself** (`app.js`). Today its behaviour is checked by hand in the browser and on the phone; browser tests need a new tool (ask before installing).
+- *(Added in step 8)* **Easier updates to the live app.** Today: `git pull` on PythonAnywhere, then Reload, by hand.
 
 ### Not in this version
 

@@ -145,7 +145,9 @@ After step 7: removed the red unsure warning and moved the Pl@ntNet confidence l
 8a done: 35 of 36 spec boxes ticked; open: "Take a photo" on the Mac (my check). One outdated spec sentence fixed.
 8b done: whole code read. Findings: outdated "warning" comments; E1/E9/E10 written inline; missing `SECRET_KEY` crashed `/unlock` (500, no clear log); Wikipedia User-Agent had no contact; passcode strength (about 1 guess/second; I chose to keep my passcode).
 8c done: fixed the first four (all messages are named constants now; missing `SECRET_KEY` logs a clear error and shows E8; User-Agent includes the GitHub address, checked against real Wikipedia). 71 tests.
-Next: 8d, retrospective.
+8d done: retrospective held. The app is well tested and really works, but my understanding felt shallow because Claude did most of the work; next time I draft the spec, features and corner cases myself first (see memory).
+8e done: phase 2 list updated in `SPEC.md` (sharing with a friend, stronger guessing protection, page tests, easier updates). Still open: one acceptance box ("Take a photo" on the Mac), my check.
+**Step 8 complete: version 1.0** (git tag `v1.0`).
 
 ## Environment notes
 
