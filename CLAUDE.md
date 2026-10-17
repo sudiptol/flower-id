@@ -77,7 +77,7 @@ A personal learning project. It's a phone-friendly web page where I take or uplo
    - 7b. Production settings: `debug` off unless running locally; gunicorn instead of Flask's development server (ask before installing)
    - 7c. The passcode lock: checked on the server; remembered with a signed cookie; wrong tries slowed down. `APP_PASSCODE` and `SECRET_KEY` in `.env` / Render settings
    - 7d. App icon (`apple-touch-icon.png`, `favicon.ico`): Safari asks for them, currently getting 404s
-   - 7e. Private GitHub repository, after scanning the whole git history for secrets
+   - 7e. **Public** GitHub repository (my choice, 2026-10-17; commits keep my Gmail address), after scanning the whole git history for secrets
    - 7f. Render service; I type the secrets into Render's settings myself
    - 7g. A real walk on mobile data, then tag `step-7`
 8. Review
@@ -135,7 +135,7 @@ Setup done: Python 3.15.0 installed from python.org, with certificates set up.
 7c built: `/unlock` checks `APP_PASSCODE` (constant-time compare, 1 s wait on a wrong try, fails closed if unset); a signed session cookie (`SECRET_KEY`) lasts 365 days, HttpOnly, and Secure on Render (`RENDER=true`); `/identify` refuses without it (401, `locked`). Page: passcode box first when locked; a 401 later goes back to it. 65 tests.
 7c done: `APP_PASSCODE` and one `SECRET_KEY` in `.env` (an earlier mistake had added four `SECRET_KEY` lines and no passcode). Phone check: locked at first, wrong passcode refused (log says so without the passcode), right one accepted, remembered in a new tab, identification normal.
 7d done: icon drawn in `static/icon.svg` (green flower on light green, my choice of two options); `scripts/make_icons.py` builds `apple-touch-icon.png` (180 px) and `favicon.ico` (32 px) with the Mac's `sips`, no installs. The built files are committed, because Render (Linux) has no `sips`. Served at the root addresses with no passcode needed; 68 tests. Phone: added to the home screen, icon correct. Safari still asks for `apple-touch-icon-precomposed.png` first (404, harmless).
-Next: 7e, private GitHub repository after scanning the git history for secrets.
+7e in progress: history scan clean (the three real secrets found 0 times in all 63 commits, files and messages; scanner proven with a known text; no photos ever committed). Repository on GitHub is **public**: every push is visible to anyone, so secrets stay only in `.env` / Render settings.
 
 ## Environment notes
 
